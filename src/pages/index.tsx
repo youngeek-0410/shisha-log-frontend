@@ -15,27 +15,15 @@ const Page: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 export default Page;
 
 const ShishaLogList: React.FC<PageProps> = ({ data }) => {
-  return (
-    <>
-      {data ? (
-        data.map((v, i) => (
-          <Link key={i} href={`/${v.id}`}>
-            <LogCard id={v.id} title={v.title} />
-          </Link>
-        ))
-      ) : (
-        <p>記録がありません</p>
-      )}
-    </>
-  );
+  return <>{data ? data.map((v, i) => <LogCard key={i} id={v.id} title={v.title} />) : <p>記録がありません</p>}</>;
 };
 
-const LogCard: React.FC<ShishaLog> = ({ id, title }) => {
+const LogCard: React.FC<ShishaLog> = (props) => {
   return (
     <div>
-      <div>
-        <p>{title}</p>
-      </div>
+      <Link key={props.id} href={`/log/${props.id}`}>
+        {props.id}: {props.title}
+      </Link>
     </div>
   );
 };

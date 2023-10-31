@@ -1,3 +1,4 @@
+import { Text } from "@chakra-ui/react";
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import Link from "next/link";
 
@@ -22,7 +23,9 @@ const LogCard: React.FC<ShishaLog> = (props) => {
   return (
     <div>
       <Link key={props.id} href={`/log/${props.id}`}>
-        {props.id}: {props.title}
+        <Text color="secondary">
+          {props.id}: {props.title}
+        </Text>
       </Link>
     </div>
   );

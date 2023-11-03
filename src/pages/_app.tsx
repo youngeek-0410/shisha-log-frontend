@@ -1,10 +1,14 @@
-import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
+// import "@/styles/globals.css";
+import type { AppProps } from "next/app";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "../theme";
+import { CssBaseline } from "@mui/material";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <main className="min-h-screen">
-      <Component {...pageProps}/>
-    </main>
-)
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Component {...pageProps} />
+    </ThemeProvider>
+  );
 }

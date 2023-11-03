@@ -23,7 +23,7 @@ const LogCard: React.FC<ShishaLog> = (props) => {
   return (
     <div>
       <Link key={props.id} href={`/log/${props.id}`}>
-        <Text color="secondary">
+        <Text>
           {props.id}: {props.title}
         </Text>
       </Link>

@@ -5,6 +5,7 @@ export const theme = extendTheme({
     global: {
       body: {
         backgroundColor: "#292929",
+        color: "#B6A2D1",
         // color: "#FFF9C4",
       },
       html: {

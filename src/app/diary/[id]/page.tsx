@@ -7,7 +7,7 @@ async function getDiary(id: string) {
   return { data };
 }
 
-export default async function ShishaLogDetail({ params }: { params: { id: string } }) {
+export default async function DiaryDetail({ params }: { params: { id: string } }) {
   const { data } = await getDiary(params.id);
   console.log(params.id);
   return (

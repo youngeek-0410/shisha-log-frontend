@@ -8,12 +8,12 @@ const getAllDiary = async () => {
   return { data };
 };
 
-export default async function Page() {
+export default async function Home() {
   const { data } = await getAllDiary();
   return (
     <>
       {data.map((v, i) => (
-        <LogCard key={i} id={v.id} title={v.title} />
+        <DiaryCard key={i} id={v.id} title={v.title} />
       ))}
       {/* <ShishaLogList data={records} /> */}
       <Link href="/diary/new">
@@ -27,7 +27,7 @@ export default async function Page() {
 //   return <>{data ? data.map((v, i) => <LogCard key={i} id={v.id} title={v.title} />) : <p>記録がありません</p>}</>;
 // };
 
-const LogCard: React.FC<Diary> = (props) => {
+const DiaryCard: React.FC<Diary> = (props) => {
   return (
     <div>
       <Link key={props.id} href={`/diary/${props.id}`}>

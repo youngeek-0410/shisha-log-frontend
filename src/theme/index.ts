@@ -38,6 +38,13 @@ const theme = createTheme({
         },
       },
     },
+    MuiDivider: {
+      styleOverrides: {
+        root: {
+          borderColor: purple,
+        },
+      },
+    },
   },
 });
 

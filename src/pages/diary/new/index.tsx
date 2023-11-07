@@ -1,4 +1,4 @@
-import { Box, Button, Input, Step, StepLabel, Stepper, Typography } from "@mui/material";
+import { Box, Button, Divider, Input, Step, StepLabel, Stepper, Typography } from "@mui/material";
 import { NextPage } from "next";
 import { useState } from "react";
 import { UseFormRegister, useForm } from "react-hook-form";
@@ -48,21 +48,21 @@ const NewDiary: NextPage = () => {
   };
 
   return (
-    <>
-      <Stepper activeStep={activeStep} alternativeLabel>
+    <Box m={3}>
+      <Stepper activeStep={activeStep} alternativeLabel sx={{ marginBottom: 2 }}>
         {steps.map((label) => (
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
           </Step>
         ))}
       </Stepper>
+      <Divider light />
       <form onSubmit={handleSubmit(onSubmit)}>
         {activeStep === steps.length ? (
           <div>
             <Typography sx={{ mt: 2, mb: 1 }}>All steps completed - you&apos;re finished</Typography>
             <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
               <Box sx={{ flex: "1 1 auto" }} />
-              {/* <Button onClick={handleReset}>Reset</Button> */}
               <Button type="submit">Submit</Button>
             </Box>
           </div>
@@ -81,7 +81,7 @@ const NewDiary: NextPage = () => {
           </div>
         )}
       </form>
-    </>
+    </Box>
   );
 };
 

@@ -1,5 +1,5 @@
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
-import testData from "../../../public/testData/shishaLog.json";
+import testData from "../../../../public/testData/shishaLog.json";
 
 type PageProps = {
   data: ShishaLog[];

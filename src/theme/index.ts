@@ -1,10 +1,13 @@
 import { createTheme } from "@mui/material/styles";
 
+const purple = "#B6A2D1";
+const gray = "#cecece";
+
 const theme = createTheme({
   palette: {
-    // primary: {
-    //   main: "#B6A2D1",
-    // },
+    primary: {
+      main: purple,
+    },
     // secondary: {
     // main: "#19857b",
     // },
@@ -12,15 +15,33 @@ const theme = createTheme({
       default: "#292929",
     },
     text: {
-      primary: "#B6A2D1",
+      primary: purple,
+      secondary: gray,
+      disabled: gray,
     },
   },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         a: {
-          color: "#B6A2D1",
+          color: purple,
           textDecoration: "none",
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          "&.Mui-disabled": {
+            color: gray,
+          },
+        },
+      },
+    },
+    MuiDivider: {
+      styleOverrides: {
+        root: {
+          borderColor: purple,
         },
       },
     },

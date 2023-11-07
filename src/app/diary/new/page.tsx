@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Button, Divider, Input, Step, StepLabel, Stepper, Typography } from "@mui/material";
 import { NextPage } from "next";
 import { useState } from "react";

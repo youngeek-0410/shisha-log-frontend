@@ -1,15 +1,15 @@
 import { Button } from "@mui/material";
 import Link from "next/link";
 
-const getRecord = async () => {
+const getAllDiary = async () => {
   const res = await fetch("http://localhost:3000/testData/shishaLog.json");
-  const data: ShishaLog[] = await res.json();
+  const data: Diary[] = await res.json();
 
   return { data };
 };
 
 export default async function Page() {
-  const { data } = await getRecord();
+  const { data } = await getAllDiary();
   return (
     <>
       {data.map((v, i) => (
@@ -27,7 +27,7 @@ export default async function Page() {
 //   return <>{data ? data.map((v, i) => <LogCard key={i} id={v.id} title={v.title} />) : <p>記録がありません</p>}</>;
 // };
 
-const LogCard: React.FC<ShishaLog> = (props) => {
+const LogCard: React.FC<Diary> = (props) => {
   return (
     <div>
       <Link key={props.id} href={`/diary/${props.id}`}>

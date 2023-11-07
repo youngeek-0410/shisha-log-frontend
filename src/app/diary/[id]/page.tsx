@@ -9,7 +9,6 @@ async function getDiary(id: string) {
 
 export default async function DiaryDetail({ params }: { params: { id: string } }) {
   const { data } = await getDiary(params.id);
-  console.log(params.id);
   return (
     <>
       <p>

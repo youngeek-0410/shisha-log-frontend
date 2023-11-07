@@ -90,10 +90,6 @@ const NewDiary: NextPage = () => {
 export default NewDiary;
 
 const EquipmentForm = ({ register }: FormProps) => {
-  //   const { register, handleSubmit } = useForm();
-  //   const onSubmit = (d) => {
-  //     alert(JSON.stringify(d));
-  //   };
   return <Input {...register("title")} />;
 };
 

@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Button, Divider, Input, Step, StepLabel, Stepper, Typography } from "@mui/material";
 import { NextPage } from "next";
 import { useState } from "react";
@@ -88,10 +90,6 @@ const NewDiary: NextPage = () => {
 export default NewDiary;
 
 const EquipmentForm = ({ register }: FormProps) => {
-  //   const { register, handleSubmit } = useForm();
-  //   const onSubmit = (d) => {
-  //     alert(JSON.stringify(d));
-  //   };
   return <Input {...register("title")} />;
 };
 

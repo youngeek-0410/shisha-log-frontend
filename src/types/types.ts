@@ -1,4 +1,4 @@
-type ShishaLog = {
+type Diary = {
   id: number;
   title: string;
 };

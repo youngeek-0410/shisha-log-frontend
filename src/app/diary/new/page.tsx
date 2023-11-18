@@ -1,17 +1,5 @@
 "use client";
 
-// 開発用データ
-const pipeData = [
-  {
-    id: 0,
-    name: "shishabucks",
-  },
-  {
-    id: 1,
-    name: "test",
-  },
-];
-
 import {
   Box,
   Button,
@@ -30,36 +18,35 @@ import { NextPage } from "next";
 import { useState } from "react";
 import { UseFormRegister, useForm, Controller, Control } from "react-hook-form";
 
-type FormProps = {
-  register: UseFormRegister<FormValues>;
-  control: Control<FormValues>;
-};
+// 開発用データ
+const testData = [
+  {
+    id: 0,
+    name: "Option1",
+  },
+  {
+    id: 1,
+    name: "Option2",
+  },
+];
+
+const steps = ["equipment", "process", "evaluation"];
 
 type FormValues = {
   title: string;
   pipeId: number;
   bowlId: number;
   hmsId: number;
+  charcoalId: number;
+  temperature: number;
+  humidity: number;
   process: string[];
-  evaluation: string;
+  eval: string;
 };
 
-const steps = ["equipment", "process", "evaluation"];
-
-// const changeFormComponent = (activeStep: number, register: UseFormRegister<FormValues>) => {
-const changeFormComponent = (
-  activeStep: number,
-  register: UseFormRegister<FormValues>,
-  control: Control<FormValues>
-) => {
-  switch (activeStep) {
-    case 0:
-      return <EquipmentForm register={register} control={control} />;
-    case 1:
-      return <ProcessForm register={register} control={control} />;
-    case 2:
-      return <Evaluation register={register} control={control} />;
-  }
+type FormProps = {
+  register: UseFormRegister<FormValues>;
+  control: Control<FormValues>;
 };
 
 const NewDiary: NextPage = () => {
@@ -122,38 +109,69 @@ const NewDiary: NextPage = () => {
 
 export default NewDiary;
 
+const changeFormComponent = (
+  activeStep: number,
+  register: UseFormRegister<FormValues>,
+  control: Control<FormValues>
+) => {
+  switch (activeStep) {
+    case 0:
+      return <EquipmentForm register={register} control={control} />;
+    case 1:
+      return <ProcessForm register={register} control={control} />;
+    case 2:
+      return <Evaluation register={register} control={control} />;
+  }
+};
+
 const EquipmentForm = ({ register, control }: FormProps) => {
   return (
     <>
-      <Input {...register("title")} />
-      <FormControl sx={{ width: "200px" }}>
-        <InputLabel id="pipe-select-label">Pipe</InputLabel>
-        {/* <Select labelId="pipe-select-label" id="pipe-select" label="Pipe">
-          <MenuItem value={0}>Ten</MenuItem>
-          <MenuItem value={1}>Twenty</MenuItem>
-          <MenuItem value={2}>Thirty</MenuItem>
-        </Select> */}
-        <Controller
-          name="pipeId"
-          control={control}
-          // defaultValue={0}
-          render={({ field }) => (
-            <Select
-              {...field}
-              labelId="pipe-select-label"
-              label="Pipe"
-              onChange={(e) => field.onChange(e.target.value)}
-            >
-              {pipeData.map((v, i) => (
-                <MenuItem key={i} value={v.id}>
-                  {v.name}
-                </MenuItem>
-              ))}
-            </Select>
-          )}
-        />
-      </FormControl>
+      <Box sx={{ marginBottom: 1 }}>
+        <Input {...register("title")} placeholder="Title" />
+      </Box>
+
+      <CustomizedSelecter control={control} data={testData} propName="pipeId" label="Pipe"></CustomizedSelecter>
+      <CustomizedSelecter control={control} data={testData} propName="bowlId" label="Bowl"></CustomizedSelecter>
+      <CustomizedSelecter
+        control={control}
+        data={testData}
+        propName="hmsId"
+        label="Heat Management"
+      ></CustomizedSelecter>
+      <CustomizedSelecter control={control} data={testData} propName="charcoalId" label="Charcoal"></CustomizedSelecter>
     </>
+  );
+};
+
+const CustomizedSelecter = ({
+  control,
+  propName,
+  label,
+  data,
+}: {
+  control: Control<FormValues>;
+  propName: "pipeId" | "bowlId" | "hmsId" | "charcoalId";
+  label: string;
+  data: any;
+}) => {
+  return (
+    <FormControl sx={{ width: "200px" }}>
+      <InputLabel id={label}>{label}</InputLabel>
+      <Controller
+        name={propName}
+        control={control}
+        render={({ field }) => (
+          <Select {...field} labelId={label} label={label} onChange={(e) => field.onChange(e.target.value)}>
+            {data.map((v: any, i: any) => (
+              <MenuItem key={i} value={v.id}>
+                {v.name}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
+      />
+    </FormControl>
   );
 };
 
@@ -162,5 +180,5 @@ const ProcessForm = ({ register }: FormProps) => {
 };
 
 const Evaluation = ({ register }: FormProps) => {
-  return <Input {...register("evaluation")} />;
+  return <Input {...register("eval")} />;
 };

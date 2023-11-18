@@ -1,5 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
+const black = "#292929";
 const purple = "#B6A2D1";
 const gray = "#cecece";
 
@@ -12,7 +13,7 @@ const theme = createTheme({
     // main: "#19857b",
     // },
     background: {
-      default: "#292929",
+      default: black,
     },
     text: {
       primary: purple,
@@ -42,6 +43,13 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderColor: purple,
+        },
+      },
+    },
+    MuiList: {
+      styleOverrides: {
+        root: {
+          backgroundColor: black,
         },
       },
     },

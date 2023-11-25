@@ -1,4 +1,4 @@
-import { Theme, createTheme } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 
 const background = "#292929";
 const purple = "#B6A2D1";

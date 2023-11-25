@@ -4,7 +4,9 @@ import React from "react";
 import { NextPage } from "next";
 import { Box, Button, Divider, Step, StepLabel, Stepper, Typography } from "@mui/material";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { EquipmentForm, Evaluation, ProcessForm } from "./Forms";
+import { EquipmentForm } from "./EquipmentForm";
+import { ProcessForm } from "./ProccessForm";
+import { Evaluation } from "./Evaluation";
 
 const steps = ["equipment", "process", "evaluation"];
 
@@ -20,7 +22,6 @@ const testData = [
 ];
 
 export type Flavor = {
-  // id: number;
   brandId: number;
   tasteId: number;
   amount: number | undefined;

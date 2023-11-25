@@ -156,17 +156,3 @@ const EquipmentSelecter: React.FC<EquipmentSelecterProps> = ({ control, propName
     />
   </FormControl>
 );
-
-type ProcessFormProps = {
-  register: UseFormRegister<FormValues>;
-  control: Control<FormValues>;
-};
-
-export const ProcessForm: React.FC<ProcessFormProps> = ({ register, control }) => <Input {...register("process")} />;
-
-type EvaluationProps = {
-  register: UseFormRegister<FormValues>;
-  control: Control<FormValues>;
-};
-
-export const Evaluation: React.FC<EvaluationProps> = ({ register, control }) => <Input {...register("eval")} />;

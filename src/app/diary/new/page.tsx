@@ -19,14 +19,14 @@ const testData = [
   },
 ];
 
-type Flavor = {
-  id: number;
-  taste: string;
-  brand: string;
+export type Flavor = {
+  // id: number;
+  brandId: number;
+  tasteId: number;
   amount: number | undefined;
 };
 
-type FormValues = {
+export type FormValues = {
   title: string;
   pipeId: number;
   bowlId: number;
@@ -41,7 +41,7 @@ type FormValues = {
 
 const NewDiary: NextPage = () => {
   const { register, handleSubmit, reset, control } = useForm<FormValues>({
-    defaultValues: { flavor: [{ brand: "", taste: "" }] },
+    defaultValues: { flavor: [{}] },
   });
   const [activeStep, setActiveStep] = React.useState<number>(0);
 

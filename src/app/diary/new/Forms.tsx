@@ -4,15 +4,22 @@ import { Control, Controller, UseFormRegister, useFieldArray } from "react-hook-
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import CustomHeading from "@/component/customHeading";
+import { FormValues } from "./page";
 
 type EquipmentFormProps = {
-  register: UseFormRegister<any>;
-  control: Control<any>;
+  register: UseFormRegister<FormValues>;
+  control: Control<FormValues>;
   testData: any;
 };
 
+type EquipmentSelecterProps = {
+  control: Control<FormValues>;
+  propName: "pipeId" | "bowlId" | "hmsId" | "charcoalId";
+  label: string;
+  data: any;
+};
+
 export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control, testData }) => {
-  const initialFlavor = { id: 0, taste: "", brand: "", amount: undefined };
   const { fields, append, remove } = useFieldArray({
     control,
     name: "flavor",
@@ -88,7 +95,7 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
         return (
           <Grid container spacing={1} alignItems="center" key={index} mb={1}>
             <Grid item xs={4}>
-              <Select {...field} {...register(`flavor.${index}.brand`)} fullWidth size="small">
+              <Select {...field} {...register(`flavor.${index}.brandId`)} fullWidth size="small">
                 {testData.map((v: any, i: any) => (
                   <MenuItem key={i} value={v.id}>
                     {v.name}
@@ -97,7 +104,7 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
               </Select>
             </Grid>
             <Grid item xs={4}>
-              <Select {...field} {...register(`flavor.${index}.taste`)} fullWidth size="small">
+              <Select {...field} {...register(`flavor.${index}.tasteId`)} fullWidth size="small">
                 {testData.map((v: any, i: any) => (
                   <MenuItem key={i} value={v.id}>
                     {v.name}
@@ -118,7 +125,9 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
               </Box>
             </Grid>
             <Grid item xs={2}>
-              <Button onClick={() => (isFirstField ? append(initialFlavor) : remove(index))}>
+              <Button
+                onClick={() => (isFirstField ? append({ brandId: 0, tasteId: 0, amount: undefined }) : remove(index))}
+              >
                 {isFirstField ? <AddCircleOutlineIcon /> : <RemoveCircleOutlineIcon color="error" />}
               </Button>
             </Grid>
@@ -129,28 +138,7 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
   );
 };
 
-type ProcessFormProps = {
-  register: UseFormRegister<any>;
-  control: Control<any>;
-};
-
-export const ProcessForm: React.FC<ProcessFormProps> = ({ register, control }) => <Input {...register("process")} />;
-
-type EvaluationProps = {
-  register: UseFormRegister<any>;
-  control: Control<any>;
-};
-
-export const Evaluation: React.FC<EvaluationProps> = ({ register, control }) => <Input {...register("eval")} />;
-
-type EquipmentSelecterProps = {
-  control: Control<any>;
-  propName: string;
-  label: string;
-  data: any;
-};
-
-export const EquipmentSelecter: React.FC<EquipmentSelecterProps> = ({ control, propName, label, data }) => (
+const EquipmentSelecter: React.FC<EquipmentSelecterProps> = ({ control, propName, label, data }) => (
   <FormControl sx={{ width: "200px" }} size="small">
     <InputLabel id={label}>{label}</InputLabel>
     <Controller
@@ -168,3 +156,17 @@ export const EquipmentSelecter: React.FC<EquipmentSelecterProps> = ({ control, p
     />
   </FormControl>
 );
+
+type ProcessFormProps = {
+  register: UseFormRegister<FormValues>;
+  control: Control<FormValues>;
+};
+
+export const ProcessForm: React.FC<ProcessFormProps> = ({ register, control }) => <Input {...register("process")} />;
+
+type EvaluationProps = {
+  register: UseFormRegister<FormValues>;
+  control: Control<FormValues>;
+};
+
+export const Evaluation: React.FC<EvaluationProps> = ({ register, control }) => <Input {...register("eval")} />;

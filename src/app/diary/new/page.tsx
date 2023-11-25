@@ -5,6 +5,7 @@ import {
   Button,
   Divider,
   FormControl,
+  Grid,
   Input,
   InputLabel,
   MenuItem,
@@ -13,10 +14,13 @@ import {
   StepLabel,
   Stepper,
   Typography,
+  styled,
 } from "@mui/material";
 import { NextPage } from "next";
 import { useState } from "react";
-import { UseFormRegister, useForm, Controller, Control } from "react-hook-form";
+import { UseFormRegister, useForm, Controller, Control, useFieldArray } from "react-hook-form";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 // 開発用データ
 const testData = [
@@ -40,8 +44,16 @@ type FormValues = {
   charcoalId: number;
   temperature: number;
   humidity: number;
+  flavor: Flavor[];
   process: string[];
   eval: string;
+};
+
+type Flavor = {
+  id: number;
+  taste: string;
+  brand: string;
+  amount: number | undefined;
 };
 
 type FormProps = {
@@ -49,8 +61,25 @@ type FormProps = {
   control: Control<FormValues>;
 };
 
+const changeFormComponent = (
+  activeStep: number,
+  register: UseFormRegister<FormValues>,
+  control: Control<FormValues>
+) => {
+  switch (activeStep) {
+    case 0:
+      return <EquipmentForm register={register} control={control} />;
+    case 1:
+      return <ProcessForm register={register} control={control} />;
+    case 2:
+      return <Evaluation register={register} control={control} />;
+  }
+};
+
 const NewDiary: NextPage = () => {
-  const { register, handleSubmit, reset, control } = useForm<FormValues>();
+  const { register, handleSubmit, reset, control } = useForm<FormValues>({
+    defaultValues: { flavor: [{ brand: "", taste: "" }] },
+  });
   const onSubmit = (d: FormValues) => {
     alert(JSON.stringify(d));
     reset();
@@ -109,41 +138,160 @@ const NewDiary: NextPage = () => {
 
 export default NewDiary;
 
-const changeFormComponent = (
-  activeStep: number,
-  register: UseFormRegister<FormValues>,
-  control: Control<FormValues>
-) => {
-  switch (activeStep) {
-    case 0:
-      return <EquipmentForm register={register} control={control} />;
-    case 1:
-      return <ProcessForm register={register} control={control} />;
-    case 2:
-      return <Evaluation register={register} control={control} />;
-  }
-};
+const CustomTypography = styled(Typography)(({ theme }) => ({
+  fontSize: "20px",
+  position: "relative",
+  marginBottom: 2,
+  "&:before": {
+    content: '""',
+    position: "absolute",
+    bottom: "-7px",
+    width: "100%",
+    height: "1px",
+    backgroundColor: theme.palette.primary.main,
+  },
+  "&:after": {
+    content: '""',
+    position: "absolute",
+    bottom: "-7px",
+    right: "-10px",
+    width: "30%",
+    height: "1px",
+    backgroundColor: theme.palette.secondary.main,
+  },
+}));
 
 const EquipmentForm = ({ register, control }: FormProps) => {
+  const initialFlavor = { id: 0, taste: "", brand: "", amount: undefined };
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "flavor",
+  });
+
   return (
     <>
-      <Box sx={{ marginBottom: 1 }}>
-        <Input {...register("title")} placeholder="Title" />
+      <Box mb={3}>
+        <Box mb={2}>
+          <CustomTypography sx={{ display: "inline" }}>Equipment</CustomTypography>
+        </Box>
+        <Box sx={{ marginBottom: 1 }}>
+          <Input {...register("title")} placeholder="Title" />
+        </Box>
+
+        <CustomizedSelecter control={control} data={testData} propName="pipeId" label="Pipe"></CustomizedSelecter>
+        <CustomizedSelecter control={control} data={testData} propName="bowlId" label="Bowl"></CustomizedSelecter>
+        <CustomizedSelecter
+          control={control}
+          data={testData}
+          propName="hmsId"
+          label="Heat Management"
+        ></CustomizedSelecter>
+        <CustomizedSelecter
+          control={control}
+          data={testData}
+          propName="charcoalId"
+          label="Charcoal"
+        ></CustomizedSelecter>
+
+        <Box display="flex" alignItems="center">
+          <Typography>Climate :</Typography>
+          <Input
+            type="number"
+            {...register("temperature")}
+            inputProps={{
+              style: { textAlign: "center" },
+            }}
+            sx={{
+              width: "50px",
+            }}
+          />
+          <Typography>℃,</Typography>
+
+          <Input
+            type="number"
+            {...register("humidity")}
+            inputProps={{
+              style: { textAlign: "center" },
+            }}
+            sx={{
+              width: "50px",
+            }}
+          />
+          <Typography>%</Typography>
+        </Box>
       </Box>
 
-      <CustomizedSelecter control={control} data={testData} propName="pipeId" label="Pipe"></CustomizedSelecter>
-      <CustomizedSelecter control={control} data={testData} propName="bowlId" label="Bowl"></CustomizedSelecter>
-      <CustomizedSelecter
-        control={control}
-        data={testData}
-        propName="hmsId"
-        label="Heat Management"
-      ></CustomizedSelecter>
-      <CustomizedSelecter control={control} data={testData} propName="charcoalId" label="Charcoal"></CustomizedSelecter>
+      <Box>
+        <Box mb={2}>
+          <CustomTypography display="inline">Flavor</CustomTypography>
+        </Box>
+        <Grid container spacing={1} alignItems="center">
+          <Grid item xs={4} textAlign="center">
+            <Typography>Brand</Typography>
+          </Grid>
+          <Grid item xs={4} textAlign="center">
+            <Typography>Taste</Typography>
+          </Grid>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={2}></Grid>
+        </Grid>
+
+        {fields.map((field, index) => {
+          const isFirstField = index === 0;
+          return (
+            <Grid container spacing={1} alignItems="center">
+              <Grid item xs={4}>
+                <Select {...field} {...register(`flavor.${index}.brand`)} fullWidth>
+                  {testData.map((v: any, i: any) => (
+                    <MenuItem key={i} value={v.id}>
+                      {v.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid item xs={4}>
+                <Select {...field} {...register(`flavor.${index}.taste`)} fullWidth>
+                  {testData.map((v: any, i: any) => (
+                    <MenuItem key={i} value={v.id}>
+                      {v.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid item xs={2}>
+                <Box display="flex">
+                  <Input
+                    type="number"
+                    {...register(`flavor.${index}.amount`)}
+                    inputProps={{
+                      style: { textAlign: "center" },
+                    }}
+                  />
+                  <Typography>g</Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={2}>
+                <Button onClick={() => (isFirstField ? append(initialFlavor) : remove(index))}>
+                  {isFirstField ? <AddCircleOutlineIcon /> : <RemoveCircleOutlineIcon color="error" />}
+                </Button>
+              </Grid>
+            </Grid>
+          );
+        })}
+      </Box>
     </>
   );
 };
 
+const ProcessForm = ({ register }: FormProps) => {
+  return <Input {...register("process")} />;
+};
+
+const Evaluation = ({ register }: FormProps) => {
+  return <Input {...register("eval")} />;
+};
+
+// データ構造が決まったら型直す
 const CustomizedSelecter = ({
   control,
   propName,
@@ -173,12 +321,4 @@ const CustomizedSelecter = ({
       />
     </FormControl>
   );
-};
-
-const ProcessForm = ({ register }: FormProps) => {
-  return <Input {...register("process")} />;
-};
-
-const Evaluation = ({ register }: FormProps) => {
-  return <Input {...register("eval")} />;
 };

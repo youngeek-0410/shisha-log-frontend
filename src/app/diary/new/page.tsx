@@ -21,6 +21,7 @@ import { useState } from "react";
 import { UseFormRegister, useForm, Controller, Control, useFieldArray } from "react-hook-form";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import CustomHeading from "@/component/customHeading";
 
 // 開発用データ
 const testData = [
@@ -138,29 +139,6 @@ const NewDiary: NextPage = () => {
 
 export default NewDiary;
 
-const CustomTypography = styled(Typography)(({ theme }) => ({
-  fontSize: "20px",
-  position: "relative",
-  marginBottom: 2,
-  "&:before": {
-    content: '""',
-    position: "absolute",
-    bottom: "-7px",
-    width: "100%",
-    height: "1px",
-    backgroundColor: theme.palette.primary.main,
-  },
-  "&:after": {
-    content: '""',
-    position: "absolute",
-    bottom: "-7px",
-    right: "-10px",
-    width: "30%",
-    height: "1px",
-    backgroundColor: theme.palette.secondary.main,
-  },
-}));
-
 const EquipmentForm = ({ register, control }: FormProps) => {
   const initialFlavor = { id: 0, taste: "", brand: "", amount: undefined };
   const { fields, append, remove } = useFieldArray({
@@ -172,7 +150,7 @@ const EquipmentForm = ({ register, control }: FormProps) => {
     <>
       <Box mb={3}>
         <Box mb={2}>
-          <CustomTypography sx={{ display: "inline" }}>Equipment</CustomTypography>
+          <CustomHeading>Equipment</CustomHeading>
         </Box>
         <Box sx={{ marginBottom: 1 }}>
           <Input {...register("title")} placeholder="Title" />
@@ -223,7 +201,7 @@ const EquipmentForm = ({ register, control }: FormProps) => {
 
       <Box>
         <Box mb={2}>
-          <CustomTypography display="inline">Flavor</CustomTypography>
+          <CustomHeading>Flavor</CustomHeading>
         </Box>
         <Grid container spacing={1} alignItems="center">
           <Grid item xs={4} textAlign="center">

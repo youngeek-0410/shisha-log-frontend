@@ -155,20 +155,15 @@ const EquipmentForm = ({ register, control }: FormProps) => {
           <Input {...register("title")} placeholder="Title" />
         </Box>
 
-        <CustomizedSelecter control={control} data={testData} propName="pipeId" label="Pipe"></CustomizedSelecter>
-        <CustomizedSelecter control={control} data={testData} propName="bowlId" label="Bowl"></CustomizedSelecter>
-        <CustomizedSelecter
+        <EquipmentSelecter control={control} data={testData} propName="pipeId" label="Pipe"></EquipmentSelecter>
+        <EquipmentSelecter control={control} data={testData} propName="bowlId" label="Bowl"></EquipmentSelecter>
+        <EquipmentSelecter
           control={control}
           data={testData}
           propName="hmsId"
           label="Heat Management"
-        ></CustomizedSelecter>
-        <CustomizedSelecter
-          control={control}
-          data={testData}
-          propName="charcoalId"
-          label="Charcoal"
-        ></CustomizedSelecter>
+        ></EquipmentSelecter>
+        <EquipmentSelecter control={control} data={testData} propName="charcoalId" label="Charcoal"></EquipmentSelecter>
 
         <Box display="flex" alignItems="center">
           <Typography>Climate :</Typography>
@@ -269,7 +264,7 @@ const Evaluation = ({ register }: FormProps) => {
 };
 
 // データ構造が決まったら型直す
-const CustomizedSelecter = ({
+const EquipmentSelecter = ({
   control,
   propName,
   label,

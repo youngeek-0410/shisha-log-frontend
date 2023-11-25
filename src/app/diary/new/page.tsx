@@ -14,7 +14,6 @@ import {
   StepLabel,
   Stepper,
   Typography,
-  styled,
 } from "@mui/material";
 import { NextPage } from "next";
 import { useState } from "react";

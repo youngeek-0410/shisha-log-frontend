@@ -1,5 +1,5 @@
 import { Control, UseFormRegister } from "react-hook-form";
-import { FormValues } from "./page";
+import { FormValues } from "./Form";
 import { Input } from "@mui/material";
 
 type ProcessFormProps = {

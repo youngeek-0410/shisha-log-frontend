@@ -1,6 +1,6 @@
 import React from "react";
 import { NextPage } from "next";
-import Form from "./Form";
+import Form from "./_components/Form";
 
 const getAllItems = async () => {
   const res = await fetch("http://localhost:3000/testData/selecterOptionData.json");

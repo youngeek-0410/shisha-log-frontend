@@ -5,7 +5,7 @@ import { Box, Grid, Input, Select, MenuItem, Button, Typography, FormControl, In
 import { Control, Controller, UseFormRegister, useFieldArray } from "react-hook-form";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import CustomHeading from "@/component/customHeading";
+import CustomHeading from "@/_components/customHeading";
 import { FormValues } from "./Form";
 
 type EquipmentFormProps = {

@@ -1,25 +1,56 @@
+"use client";
+
 import React from "react";
 import { Box, Grid, Input, Select, MenuItem, Button, Typography, FormControl, InputLabel } from "@mui/material";
 import { Control, Controller, UseFormRegister, useFieldArray } from "react-hook-form";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import CustomHeading from "@/component/customHeading";
-import { FormValues } from "./page";
+import { FormValues } from "./Form";
 
 type EquipmentFormProps = {
   register: UseFormRegister<FormValues>;
   control: Control<FormValues>;
-  testData: any;
+  data: any;
 };
 
 type EquipmentSelecterProps = {
   control: Control<FormValues>;
-  propName: "pipeId" | "bowlId" | "hmsId" | "charcoalId";
+  propName: keyof FormValues;
   label: string;
   data: any;
 };
 
-export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control, testData }) => {
+type equipmentItem = {
+  itemData: any;
+  propName: keyof FormValues;
+  label: string;
+};
+
+export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control, data }) => {
+  const equipmentItemList: equipmentItem[] = [
+    {
+      itemData: data,
+      propName: "bottleId",
+      label: "Bottle",
+    },
+    {
+      itemData: data,
+      propName: "bowlId",
+      label: "Bowl",
+    },
+    {
+      itemData: data,
+      propName: "hmsId",
+      label: "Heat Management",
+    },
+    {
+      itemData: data,
+      propName: "charcoalId",
+      label: "Charcoal",
+    },
+  ];
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "flavor",
@@ -34,20 +65,16 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
         <Input {...register("title")} placeholder="Title" sx={{ marginBottom: 1 }} />
 
         <Box display="flex" flexDirection="column" gap={1}>
-          <EquipmentSelecter control={control} data={testData} propName="pipeId" label="Pipe"></EquipmentSelecter>
-          <EquipmentSelecter control={control} data={testData} propName="bowlId" label="Bowl"></EquipmentSelecter>
-          <EquipmentSelecter
-            control={control}
-            data={testData}
-            propName="hmsId"
-            label="Heat Management"
-          ></EquipmentSelecter>
-          <EquipmentSelecter
-            control={control}
-            data={testData}
-            propName="charcoalId"
-            label="Charcoal"
-          ></EquipmentSelecter>
+          {equipmentItemList &&
+            equipmentItemList.map((v, i) => (
+              <EquipmentSelecter
+                key={i}
+                control={control}
+                data={v.itemData}
+                propName={v.propName}
+                label={v.label}
+              ></EquipmentSelecter>
+            ))}
         </Box>
 
         <Box display="flex" alignItems="center">
@@ -96,7 +123,7 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
           <Grid container spacing={1} alignItems="center" key={index} mb={1}>
             <Grid item xs={4}>
               <Select {...field} {...register(`flavor.${index}.brandId`)} fullWidth size="small">
-                {testData.map((v: any, i: any) => (
+                {data.map((v: any, i: any) => (
                   <MenuItem key={i} value={v.id}>
                     {v.name}
                   </MenuItem>
@@ -105,7 +132,7 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
             </Grid>
             <Grid item xs={4}>
               <Select {...field} {...register(`flavor.${index}.tasteId`)} fullWidth size="small">
-                {testData.map((v: any, i: any) => (
+                {data.map((v: any, i: any) => (
                   <MenuItem key={i} value={v.id}>
                     {v.name}
                   </MenuItem>

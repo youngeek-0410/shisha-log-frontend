@@ -7,12 +7,6 @@ import { EquipmentForm } from "./EquipmentForm";
 import { ProcessForm } from "./ProccessForm";
 import { Evaluation } from "./Evaluation";
 
-export type Flavor = {
-  brandId: number;
-  tasteId: number;
-  amount: number | undefined;
-};
-
 export type FormValues = {
   title: string;
   bottleId: number;

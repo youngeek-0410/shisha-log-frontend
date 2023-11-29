@@ -120,9 +120,9 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
       {fields.map((field, index) => {
         const isFirstField = index === 0;
         return (
-          <Grid container spacing={1} alignItems="center" key={index} mb={1}>
+          <Grid container spacing={1} alignItems="center" key={field.id} mb={1}>
             <Grid item xs={4}>
-              <Select {...field} {...register(`flavor.${index}.brandId`)} fullWidth size="small">
+              <Select key={field.id} {...register(`flavor.${index}.brandId`)} fullWidth size="small">
                 {data.map((v: any, i: any) => (
                   <MenuItem key={i} value={v.id}>
                     {v.name}
@@ -131,7 +131,7 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
               </Select>
             </Grid>
             <Grid item xs={4}>
-              <Select {...field} {...register(`flavor.${index}.tasteId`)} fullWidth size="small">
+              <Select key={field.id} {...register(`flavor.${index}.tasteId`)} fullWidth size="small">
                 {data.map((v: any, i: any) => (
                   <MenuItem key={i} value={v.id}>
                     {v.name}

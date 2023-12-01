@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import Link from "next/link";
 
 const getAllDiary = async () => {
-  const res = await fetch("http://localhost:3000/testData/shishaLog.json");
+  const res = await fetch(process.env.SHISHA_LOG_BACKEND_API + "testData/shishaLog.json");
   const data: Diary[] = await res.json();
 
   return { data };

@@ -1,7 +1,6 @@
 async function getDiary(id: string) {
-  const res = await fetch(process.env.SHISHA_LOG_BACKEND_API + "testData/shishaLog.json");
-  const datas: Diary[] = await res.json();
-  const data = datas[Number(id) - 1];
+  const res = await fetch("http://api-server:8080/", { cache: "no-store" });
+  const data: Diary = await res.json();
 
   return { data };
 }

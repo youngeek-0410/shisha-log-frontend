@@ -2,19 +2,18 @@ import { Button } from "@mui/material";
 import Link from "next/link";
 
 const getAllDiary = async () => {
-  const res = await fetch("http://localhost:3000/testData/shishaLog.json");
-  const data: Diary[] = await res.json();
+  const res = await fetch("http://api-server:8080/", { cache: "no-store" });
+  const allDiary: Diary[] = await res.json();
 
-  return { data };
+  return { allDiary };
 };
 
 export default async function Home() {
-  const { data } = await getAllDiary();
+  const { allDiary } = await getAllDiary();
   return (
     <>
-      {data.map((v, i) => (
-        <DiaryCard key={i} id={v.id} title={v.title} />
-      ))}
+      {allDiary && allDiary.map((diary) => <DiaryCard key={diary.id} id={diary.id} title={diary.title} />)}
+
       <Link href="/diary/new">
         <Button variant="outlined">作成</Button>
       </Link>

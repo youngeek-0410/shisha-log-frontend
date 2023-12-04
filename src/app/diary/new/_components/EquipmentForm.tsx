@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Box, Grid, Input, Select, MenuItem, Button, Typography, FormControl, InputLabel } from "@mui/material";
-import { Control, Controller, UseFormRegister, useFieldArray } from "react-hook-form";
+import { Control, Controller, UseFormRegister, UseFormWatch, useFieldArray } from "react-hook-form";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import CustomHeading from "@/_components/customHeading";
@@ -14,6 +14,7 @@ type EquipmentFormProps = {
 };
 
 type EquipmentSelecterProps = {
+  register: UseFormRegister<DiaryFormValues>;
   control: Control<DiaryFormValues>;
   propName: keyof DiaryFormValues;
   label: string;
@@ -67,6 +68,7 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
             equipmentItemList.map((v, i) => (
               <EquipmentSelecter
                 key={i}
+                register={register}
                 control={control}
                 data={v.itemData}
                 propName={v.propName}
@@ -115,7 +117,7 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
         </Grid>
       </Grid>
 
-      {fields.map((field, index) => {
+      {/* {fields.map((field, index) => {
         const isFirstField = index === 0;
         return (
           <Grid container spacing={1} alignItems="center" key={field.id} mb={1}>
@@ -158,19 +160,19 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
             </Grid>
           </Grid>
         );
-      })}
+      })} */}
     </>
   );
 };
 
-const EquipmentSelecter: React.FC<EquipmentSelecterProps> = ({ control, propName, label, data }) => (
+const EquipmentSelecter: React.FC<EquipmentSelecterProps> = ({ control, register, propName, label, data }) => (
   <FormControl sx={{ width: "200px" }} size="small">
     <InputLabel id={label}>{label}</InputLabel>
     <Controller
       name={propName}
       control={control}
       render={({ field }) => (
-        <Select {...field} labelId={label} label={label} onChange={(e) => field.onChange(e.target.value)}>
+        <Select {...field} labelId={label} label={label}>
           {data.map((v: any) => (
             <MenuItem key={v.id} value={v.id}>
               {v.name}

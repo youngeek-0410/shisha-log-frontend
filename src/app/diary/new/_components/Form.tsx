@@ -14,8 +14,14 @@ type FormProps = {
 const steps = ["equipment", "process", "evaluation"];
 
 const Form: React.FC<FormProps> = ({ data }) => {
-  const { register, handleSubmit, reset, control } = useForm<DiaryFormValues>({
-    defaultValues: { flavor: [{}] },
+  const { register, handleSubmit, reset, control, watch } = useForm<DiaryFormValues>({
+    defaultValues: {
+      bottleId: 1,
+      bowlId: 1,
+      hmsId: 1,
+      charcoalId: 1,
+      flavor: [{}],
+    },
   });
   const [activeStep, setActiveStep] = React.useState<number>(0);
 
@@ -54,27 +60,29 @@ const Form: React.FC<FormProps> = ({ data }) => {
       </Stepper>
       <Divider light />
 
-      {activeStep === steps.length ? (
-        <Box>
-          <Typography sx={{ mt: 2, mb: 1 }}>All steps completed - you&apos;re finished</Typography>
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button type="submit">Submit</Button>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {activeStep === steps.length ? (
+          <Box>
+            <Typography sx={{ mt: 2, mb: 1 }}>All steps completed - you&apos;re finished</Typography>
+            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+              <Box sx={{ flex: "1 1 auto" }} />
+              <Button type="submit">Submit</Button>
+            </Box>
           </Box>
-        </Box>
-      ) : (
-        <Box>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-          <form onSubmit={handleSubmit(onSubmit)}>{changeFormComponent()}</form>
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Button disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
-              Back
-            </Button>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleNext}>{activeStep === steps.length - 1 ? "Finish" : "Next"}</Button>
+        ) : (
+          <Box>
+            <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+            {changeFormComponent()}
+            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+              <Button disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
+                Back
+              </Button>
+              <Box sx={{ flex: "1 1 auto" }} />
+              <Button onClick={handleNext}>{activeStep === steps.length - 1 ? "Finish" : "Next"}</Button>
+            </Box>
           </Box>
-        </Box>
-      )}
+        )}
+      </form>
     </Box>
   );
 };

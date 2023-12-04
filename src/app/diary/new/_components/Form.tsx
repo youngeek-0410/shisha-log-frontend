@@ -7,19 +7,6 @@ import { EquipmentForm } from "./EquipmentForm";
 import { ProcessForm } from "./ProccessForm";
 import { Evaluation } from "./Evaluation";
 
-export type FormValues = {
-  title: string;
-  bottleId: number;
-  bowlId: number;
-  hmsId: number;
-  charcoalId: number;
-  temperature: number;
-  humidity: number;
-  flavor: Flavor[];
-  process: string;
-  eval: string;
-};
-
 type FormProps = {
   data: any;
 };
@@ -27,7 +14,7 @@ type FormProps = {
 const steps = ["equipment", "process", "evaluation"];
 
 const Form: React.FC<FormProps> = ({ data }) => {
-  const { register, handleSubmit, reset, control } = useForm<FormValues>({
+  const { register, handleSubmit, reset, control } = useForm<DiaryFormValues>({
     defaultValues: { flavor: [{}] },
   });
   const [activeStep, setActiveStep] = React.useState<number>(0);
@@ -36,7 +23,7 @@ const Form: React.FC<FormProps> = ({ data }) => {
   const handleBack = () => setActiveStep((prevActiveStep) => prevActiveStep - 1);
   const handleReset = () => setActiveStep(0);
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
+  const onSubmit: SubmitHandler<DiaryFormValues> = (data) => {
     console.log(data);
     alert(JSON.stringify(data));
     reset();

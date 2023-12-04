@@ -6,24 +6,23 @@ import { Control, Controller, UseFormRegister, useFieldArray } from "react-hook-
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import CustomHeading from "@/_components/customHeading";
-import { FormValues } from "./Form";
 
 type EquipmentFormProps = {
-  register: UseFormRegister<FormValues>;
-  control: Control<FormValues>;
+  register: UseFormRegister<DiaryFormValues>;
+  control: Control<DiaryFormValues>;
   data: any;
 };
 
 type EquipmentSelecterProps = {
-  control: Control<FormValues>;
-  propName: keyof FormValues;
+  control: Control<DiaryFormValues>;
+  propName: keyof DiaryFormValues;
   label: string;
   data: any;
 };
 
 type equipmentItem = {
   itemData: any;
-  propName: keyof FormValues;
+  propName: keyof DiaryFormValues;
   label: string;
 };
 
@@ -62,7 +61,6 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
         <Box mb={2}>
           <CustomHeading>Equipment</CustomHeading>
         </Box>
-        <Input {...register("title")} placeholder="Title" sx={{ marginBottom: 1 }} />
 
         <Box display="flex" flexDirection="column" gap={1}>
           {equipmentItemList &&

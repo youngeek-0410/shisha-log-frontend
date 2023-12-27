@@ -117,7 +117,7 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
         </Grid>
       </Grid>
 
-      {/* {fields.map((field, index) => {
+      {fields.map((field, index) => {
         const isFirstField = index === 0;
         return (
           <Grid container spacing={1} alignItems="center" key={field.id} mb={1}>
@@ -160,7 +160,7 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
             </Grid>
           </Grid>
         );
-      })} */}
+      })}
     </>
   );
 };

@@ -4,8 +4,8 @@ type Diary = {
 };
 
 type Flavor = {
-  brandId: number;
-  tasteId: number;
+  brandId: string;
+  tasteId: string;
   amount: number | undefined;
 };
 

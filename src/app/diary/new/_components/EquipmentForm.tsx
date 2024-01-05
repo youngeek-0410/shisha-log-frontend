@@ -1,7 +1,20 @@
 "use client";
 
-import React from "react";
-import { Box, Grid, Input, Select, MenuItem, Button, Typography, FormControl, InputLabel } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Box,
+  Grid,
+  Input,
+  Select,
+  MenuItem,
+  Button,
+  Typography,
+  FormControl,
+  InputLabel,
+  IconButton,
+  Stack,
+  TextareaAutosize,
+} from "@mui/material";
 import { Control, Controller, UseFormRegister, UseFormWatch, useFieldArray } from "react-hook-form";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
@@ -56,6 +69,8 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
     name: "flavor",
   });
 
+  const [flavors, setFlavors] = useState<Flavor[]>([{ brandId: "10", tasteId: "10", amount: 10 }]);
+
   return (
     <>
       <Box mb={3}>
@@ -108,59 +123,99 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
       <Box mb={2}>
         <CustomHeading>Flavor</CustomHeading>
       </Box>
-      <Grid container spacing={1} alignItems="center" mb={1}>
-        <Grid item xs={4} textAlign="center">
-          <Typography>Brand</Typography>
-        </Grid>
-        <Grid item xs={4} textAlign="center">
-          <Typography>Taste</Typography>
-        </Grid>
-      </Grid>
 
-      {fields.map((field, index) => {
-        const isFirstField = index === 0;
-        return (
-          <Grid container spacing={1} alignItems="center" key={field.id} mb={1}>
-            <Grid item xs={4}>
-              <Select key={field.id} {...register(`flavor.${index}.brandId`)} fullWidth size="small">
-                {data.map((v: any, i: any) => (
-                  <MenuItem key={i} value={v.id}>
-                    {v.name}
-                  </MenuItem>
-                ))}
-              </Select>
+      <Stack spacing={1}>
+        <Box>
+          <Grid container spacing={1} alignItems="center" mb={1}>
+            <Grid item xs={4} textAlign="center">
+              <Typography>Brand:</Typography>
             </Grid>
-            <Grid item xs={4}>
-              <Select key={field.id} {...register(`flavor.${index}.tasteId`)} fullWidth size="small">
-                {data.map((v: any, i: any) => (
-                  <MenuItem key={i} value={v.id}>
-                    {v.name}
-                  </MenuItem>
-                ))}
-              </Select>
+            <Grid item xs={4} textAlign="center">
+              <Typography>Taste:</Typography>
             </Grid>
-            <Grid item xs={2}>
-              <Box display="flex">
-                <Input
-                  type="number"
-                  {...register(`flavor.${index}.amount`)}
-                  inputProps={{
-                    style: { textAlign: "center" },
-                  }}
-                />
-                <Typography>g</Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={2}>
-              <Button
-                onClick={() => (isFirstField ? append({ brandId: 0, tasteId: 0, amount: undefined }) : remove(index))}
-              >
-                {isFirstField ? <AddCircleOutlineIcon /> : <RemoveCircleOutlineIcon color="error" />}
-              </Button>
+            <Grid item xs={4} textAlign="center">
+              <Typography>Weight:</Typography>
             </Grid>
           </Grid>
-        );
-      })}
+
+          <Stack>
+            <Grid container spacing={1} alignItems="center" mb={1}>
+              {flavors.map((flavor, index) => (
+                <>
+                  <Grid item xs={4} textAlign="center">
+                    <FormControl sx={{ width: "80%" }} size="small">
+                      <Select
+                        value={flavor.brandId}
+                        onChange={(e) => {
+                          setFlavors(
+                            flavors.map((flavor, interIndex) => {
+                              return index == interIndex
+                                ? { brandId: e.target.value, tasteId: flavor.tasteId, amount: flavor.amount }
+                                : flavor;
+                            })
+                          );
+                        }}
+                      >
+                        <MenuItem value={10}>hoge</MenuItem>
+                        <MenuItem value={20}>fuga</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={4} textAlign="center">
+                    <FormControl sx={{ width: "80%" }} size="small">
+                      <Select
+                        value={flavor.tasteId}
+                        onChange={(e) => {
+                          setFlavors(
+                            flavors.map((flavor, interIndex) => {
+                              return index == interIndex
+                                ? { brandId: flavor.brandId, tasteId: e.target.value, amount: flavor.amount }
+                                : flavor;
+                            })
+                          );
+                        }}
+                      >
+                        <MenuItem value={10}>hoge</MenuItem>
+                        <MenuItem value={20}>fuga</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={4} textAlign="center">
+                    <FormControl sx={{ width: "80%" }} size="small">
+                      <Box display={"flex"}>
+                        <Input type="number" />
+                        <Typography>g</Typography>
+                      </Box>
+                    </FormControl>
+                  </Grid>
+                </>
+              ))}
+            </Grid>
+            <IconButton
+              aria-label="add flavor"
+              color="primary"
+              onClick={() => {
+                setFlavors([...flavors, { brandId: "10", tasteId: "10", amount: 0 }]);
+              }}
+            >
+              <AddCircleOutlineIcon />
+            </IconButton>
+          </Stack>
+        </Box>
+
+        <Box>
+          <Typography>Service:</Typography>
+          <Input
+            multiline
+            minRows={3}
+            placeholder="例：キウイとレモンは混ぜて残りのミントとセパレートで"
+            color="primary"
+            sx={{ width: "100%" }}
+          />
+        </Box>
+
+        <Typography>Image:</Typography>
+      </Stack>
     </>
   );
 };

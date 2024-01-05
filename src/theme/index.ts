@@ -56,6 +56,13 @@ const theme = createTheme({
         },
       },
     },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          borderColor: purple,
+        },
+      },
+    },
   },
 });
 

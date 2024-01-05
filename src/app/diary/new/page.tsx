@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import Form from "./_components/Form";
 
 const getAllItems = async () => {
-  const res = await fetch("http://localhost:3000/testData/selecterOptionData.json");
+  const res = await fetch("http://localhost:3001/testData/selecterOptionData.json");
   const data = await res.json();
 
   return { data };

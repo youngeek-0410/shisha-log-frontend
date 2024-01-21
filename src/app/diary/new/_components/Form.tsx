@@ -30,7 +30,6 @@ const Form: React.FC<FormProps> = ({ data }) => {
   const handleReset = () => setActiveStep(0);
 
   const onSubmit: SubmitHandler<DiaryFormValues> = (data) => {
-    console.log(data);
     alert(JSON.stringify(data));
     reset();
     handleReset();

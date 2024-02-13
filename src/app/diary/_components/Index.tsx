@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -15,58 +16,10 @@ import {
   Typography,
 } from "@mui/material";
 import { useMemo, useState } from "react";
-
-// test data
-const flavors = [
-  { id: 1, name: "David" },
-  { id: 2, name: "John" },
-  { id: 3, name: "Ken" },
-  { id: 4, name: "Walker" },
-  { id: 5, name: "Jin" },
-  { id: 6, name: "Avicii" },
-  { id: 7, name: "Paul van dyk" },
-  { id: 8, name: "Armin ban Buuren" },
-  { id: 9, name: "Kevin" },
-];
-
-const diaries = [
-  {
-    id: 1,
-    diary_flavor_list: [
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-    ],
-    create_date: new Date(2023, 11, 5),
-    creator_evaluation: 1,
-    taste_evaluation: 9,
-  },
-  {
-    id: 2,
-    diary_flavor_list: [
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "John", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.2 },
-    ],
-    create_date: new Date(2023, 11, 30),
-    creator_evaluation: 3,
-    taste_evaluation: 2,
-  },
-  {
-    id: 3,
-    diary_flavor_list: [
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.5 },
-      { flavor_name: "Kevin", brand_name: "Afzal", amount: 10 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-    ],
-    create_date: new Date(2023, 11, 9),
-    creator_evaluation: 5,
-    taste_evaluation: 10,
-  },
-];
+import { diaries, flavors } from "./testData";
+import { useDiariesPagination } from "@/hooks/useDiariesPagenation";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 
 export const Index: React.FC = () => {
   const [creator, setCreator] = useState(-1);
@@ -74,7 +27,7 @@ export const Index: React.FC = () => {
   const [sortTerms, setSortTerms] = useState({ date: "none", creator: "none", taste: "none" });
   const [selectedFlavors, setSelectedFlavors] = useState<{ id: Number; name: string }[]>([]);
 
-  const sortedDiaries = useMemo(() => {
+  const shapedDiaries = useMemo(() => {
     let tmpDiaries = diaries;
     if (sortTerms.date != "none") {
       tmpDiaries =
@@ -94,8 +47,19 @@ export const Index: React.FC = () => {
           ? tmpDiaries.sort((cur, next) => cur.taste_evaluation - next.taste_evaluation).reverse()
           : tmpDiaries.sort((cur, next) => cur.taste_evaluation - next.taste_evaluation);
     }
-    return tmpDiaries;
-  }, [sortTerms]);
+    return tmpDiaries
+      .filter(
+        (diary) =>
+          diary.diary_flavor_list.find((flavor) =>
+            selectedFlavors.find((selectedFlavor) => selectedFlavor.name == flavor.flavor_name)
+          ) || selectedFlavors.length == 0
+      )
+      .filter((diary) => diary.creator_evaluation >= creator)
+      .filter((diary) => diary.taste_evaluation >= taste);
+  }, [sortTerms, creator, taste, selectedFlavors]);
+
+  // page
+  const { page, setPage, hasNext, hasPrev } = useDiariesPagination({ diaries: shapedDiaries });
 
   return (
     <>
@@ -182,58 +146,59 @@ export const Index: React.FC = () => {
             </Box>
           </Stack>
           <Box>
-            {sortedDiaries
-              .filter(
-                (diary) =>
-                  diary.diary_flavor_list.find((flavor) =>
-                    selectedFlavors.find((selectedFlavor) => selectedFlavor.name == flavor.flavor_name)
-                  ) || selectedFlavors.length == 0
-              )
-              .filter((diary) => diary.creator_evaluation >= creator)
-              .filter((diary) => diary.taste_evaluation >= taste)
-              .map((diary) => {
-                const flavorNames = diary.diary_flavor_list
-                  .map((flavor) => flavor.flavor_name + flavor.amount)
-                  .toString();
-                return (
-                  <Stack flexDirection={"row"} textAlign={"center"} color={"text.secondary"} key={diary.id}>
-                    <Box flexGrow={"1"} p={"5px"} border={"1px solid"} borderColor={"primary.main"} maxWidth={"185px"}>
-                      <Typography fontSize={"12px"} style={{ overflow: "auto" }}>
-                        {flavorNames}
-                      </Typography>
-                    </Box>
-                    <Box
-                      p={"5px"}
-                      minWidth={"55px"}
-                      border={"1px solid"}
-                      borderColor={"primary.main"}
-                      borderLeft={"0px"}
-                    >
-                      <Typography fontSize={"14px"}>{`${
-                        diary.create_date.getMonth() + 1
-                      }/${diary.create_date.getDate()}`}</Typography>
-                    </Box>
-                    <Box
-                      p={"5px"}
-                      minWidth={"55px"}
-                      border={"1px solid"}
-                      borderColor={"primary.main"}
-                      borderLeft={"0px"}
-                    >
-                      <Typography fontSize={"14px"}>{diary.taste_evaluation}</Typography>
-                    </Box>
-                    <Box
-                      p={"5px"}
-                      minWidth={"65px"}
-                      border={"1px solid"}
-                      borderColor={"primary.main"}
-                      borderLeft={"0px"}
-                    >
-                      <Typography fontSize={"14px"}>{diary.creator_evaluation}</Typography>
-                    </Box>
-                  </Stack>
-                );
-              })}
+            {shapedDiaries.slice(page * 10).map((diary) => {
+              const flavorNames = diary.diary_flavor_list
+                .map((flavor) => flavor.flavor_name + flavor.amount)
+                .toString();
+              return (
+                <Stack flexDirection={"row"} textAlign={"center"} color={"text.secondary"} key={diary.id}>
+                  <Box
+                    flexGrow={"1"}
+                    p={"5px"}
+                    border={"1px solid"}
+                    borderColor={"primary.main"}
+                    maxWidth={"185px"}
+                    height={"48px"}
+                    overflow={"scroll"}
+                  >
+                    <Typography fontSize={"12px"} style={{ wordBreak: "break-all" }}>
+                      {flavorNames}
+                    </Typography>
+                  </Box>
+                  <Box p={"5px"} minWidth={"55px"} border={"1px solid"} borderColor={"primary.main"} borderLeft={"0px"}>
+                    <Typography fontSize={"14px"}>{`${
+                      diary.create_date.getMonth() + 1
+                    }/${diary.create_date.getDate()}`}</Typography>
+                  </Box>
+                  <Box p={"5px"} minWidth={"55px"} border={"1px solid"} borderColor={"primary.main"} borderLeft={"0px"}>
+                    <Typography fontSize={"14px"}>{diary.taste_evaluation}</Typography>
+                  </Box>
+                  <Box p={"5px"} minWidth={"65px"} border={"1px solid"} borderColor={"primary.main"} borderLeft={"0px"}>
+                    <Typography fontSize={"14px"}>{diary.creator_evaluation}</Typography>
+                  </Box>
+                </Stack>
+              );
+            })}
+            <Stack direction={"row"} width={"100%"} justifyContent={"space-between"}>
+              <IconButton
+                size="large"
+                disabled={!hasPrev}
+                onClick={() => {
+                  setPage(page - 1);
+                }}
+              >
+                <NavigateBeforeIcon color={"primary"} fontSize="large" />
+              </IconButton>
+              <IconButton
+                size="large"
+                disabled={!hasNext}
+                onClick={() => {
+                  setPage(page + 1);
+                }}
+              >
+                <NavigateNextIcon color={"primary"} fontSize="large" />
+              </IconButton>
+            </Stack>
           </Box>
         </Stack>
       </Stack>

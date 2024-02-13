@@ -7,9 +7,10 @@ type Props = {
   starNum: number;
   setStarNum: Dispatch<SetStateAction<number>>;
   length: number;
+  size?: "medium" | "small" | "inherit" | "large";
 };
 
-export const Star = ({ starNum, setStarNum, length }: Props) => {
+export const Star = ({ starNum, setStarNum, length, size = "medium" }: Props) => {
   return (
     <Stack direction={"row"} alignItems={"center"}>
       {Array.from("1".repeat(length)).map((_, index) => (
@@ -20,7 +21,7 @@ export const Star = ({ starNum, setStarNum, length }: Props) => {
                 setStarNum(index);
               }}
             >
-              <StarIcon fontSize="small" />
+              <StarIcon fontSize={size} />
             </div>
           ) : (
             <div
@@ -28,7 +29,7 @@ export const Star = ({ starNum, setStarNum, length }: Props) => {
                 setStarNum(index + 1);
               }}
             >
-              <StarBorderIcon fontSize="small" />
+              <StarBorderIcon fontSize={size} />
             </div>
           )}
         </Box>

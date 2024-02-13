@@ -20,6 +20,7 @@ import { diaries, flavors } from "./testData";
 import { useDiariesPagination } from "@/hooks/useDiariesPagenation";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import { useRouter } from "next/navigation";
 
 export const Index: React.FC = () => {
   const [creator, setCreator] = useState(-1);
@@ -60,6 +61,8 @@ export const Index: React.FC = () => {
 
   // page
   const { page, setPage, hasNext, hasPrev } = useDiariesPagination({ diaries: shapedDiaries });
+
+  const router = useRouter();
 
   return (
     <>
@@ -201,6 +204,15 @@ export const Index: React.FC = () => {
             </Stack>
           </Box>
         </Stack>
+      </Stack>
+      <Stack flexDirection={"row"} justifyContent={"center"}>
+        <Button
+          onClick={() => {
+            router.push("/diary/new");
+          }}
+        >
+          Create Diary
+        </Button>
       </Stack>
     </>
   );

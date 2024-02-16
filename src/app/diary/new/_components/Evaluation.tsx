@@ -1,8 +1,7 @@
 import { Control, UseFormRegister } from "react-hook-form";
-import { Box, Stack, TextareaAutosize, Typography } from "@mui/material";
+import { Stack, TextareaAutosize, Typography } from "@mui/material";
 import CustomHeading from "@/_components/customHeading";
-import StarIcon from "@mui/icons-material/Star";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
+import { Star } from "@/_components/form/Star";
 import { useState } from "react";
 
 type EvaluationProps = {
@@ -20,29 +19,7 @@ export const Evaluation: React.FC<EvaluationProps> = ({ register, control }) => 
         <Stack>
           <Stack direction={"row"}>
             <Typography fontSize={"18px"}>Creator:</Typography>
-            <Stack direction={"row"} alignItems={"center"}>
-              {Array.from("12345").map((_, index) => (
-                <Box key={"start" + index} pt={"4px"}>
-                  {creator >= index ? (
-                    <div
-                      onClick={() => {
-                        setCreator(index - 1);
-                      }}
-                    >
-                      <StarIcon fontSize="small" />
-                    </div>
-                  ) : (
-                    <div
-                      onClick={() => {
-                        setCreator(index);
-                      }}
-                    >
-                      <StarBorderIcon fontSize="small" />
-                    </div>
-                  )}
-                </Box>
-              ))}
-            </Stack>
+            <Star starNum={creator} setStarNum={setCreator} length={5} />
           </Stack>
           <Stack gap={3} style={{ padding: 8 }}>
             <Stack>
@@ -76,27 +53,7 @@ export const Evaluation: React.FC<EvaluationProps> = ({ register, control }) => 
         <Stack>
           <Stack direction={"row"}>
             <Typography fontSize={"18px"}>Taste:</Typography>
-            {Array.from("12345678910").map((_, index) => (
-              <Box key={"start" + index} pt={"4px"}>
-                {taste >= index ? (
-                  <div
-                    onClick={() => {
-                      setTaste(index - 1);
-                    }}
-                  >
-                    <StarIcon fontSize="small" />
-                  </div>
-                ) : (
-                  <div
-                    onClick={() => {
-                      setTaste(index);
-                    }}
-                  >
-                    <StarBorderIcon fontSize="small" />
-                  </div>
-                )}
-              </Box>
-            ))}
+            <Star starNum={taste} setStarNum={setTaste} length={10} />
           </Stack>
           <Stack gap={3} style={{ padding: 8 }}>
             <Stack>

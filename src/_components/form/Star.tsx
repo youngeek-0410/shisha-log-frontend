@@ -1,16 +1,21 @@
 import { Box, Stack } from "@mui/material";
-import { Dispatch, SetStateAction } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
+import { Controller, FieldPath, FieldValues, UseControllerProps } from "react-hook-form";
 
 type Props = {
   starNum: number;
-  setStarNum: Dispatch<SetStateAction<number>>;
+  onChange: (number: number) => void;
   length: number;
   size?: "medium" | "small" | "inherit" | "large";
 };
 
-export const Star = ({ starNum, setStarNum, length, size = "medium" }: Props) => {
+type StarProps<TFieldValues extends FieldValues, TName extends FieldPath<TFieldValues>> = UseControllerProps<
+  TFieldValues,
+  TName
+>;
+
+export const Star = ({ starNum, onChange, length, size = "medium" }: Props) => {
   return (
     <Stack direction={"row"} alignItems={"center"}>
       {Array.from("1".repeat(length)).map((_, index) => (
@@ -18,7 +23,7 @@ export const Star = ({ starNum, setStarNum, length, size = "medium" }: Props) =>
           {starNum >= index + 1 ? (
             <div
               onClick={() => {
-                setStarNum(index);
+                onChange(index);
               }}
             >
               <StarIcon fontSize={size} />
@@ -26,7 +31,7 @@ export const Star = ({ starNum, setStarNum, length, size = "medium" }: Props) =>
           ) : (
             <div
               onClick={() => {
-                setStarNum(index + 1);
+                onChange(index + 1);
               }}
             >
               <StarBorderIcon fontSize={size} />
@@ -35,5 +40,23 @@ export const Star = ({ starNum, setStarNum, length, size = "medium" }: Props) =>
         </Box>
       ))}
     </Stack>
+  );
+};
+
+export const ControlledStar = <TFieldValues extends FieldValues, TName extends FieldPath<TFieldValues>>({
+  control,
+  name,
+  defaultValue,
+  ...rest
+}: Props & StarProps<TFieldValues, TName>) => {
+  return (
+    <Controller
+      name={name}
+      control={control}
+      defaultValue={defaultValue}
+      render={({ field: { value } }) => {
+        return <Star {...rest} starNum={value} />;
+      }}
+    />
   );
 };

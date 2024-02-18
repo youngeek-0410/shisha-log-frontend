@@ -83,11 +83,23 @@ export const Index: React.FC = () => {
           />
           <Stack direction={"row"}>
             <Typography fontSize={"18px"}>Creator:</Typography>
-            <Star starNum={creator} setStarNum={setCreator} length={5} />
+            <Star
+              starNum={creator}
+              onChange={(number) => {
+                setCreator(number);
+              }}
+              length={5}
+            />
           </Stack>
           <Stack direction={"row"}>
             <Typography fontSize={"18px"}>Taste:</Typography>
-            <Star starNum={taste} setStarNum={setTaste} length={10} />
+            <Star
+              starNum={taste}
+              onChange={(number) => {
+                setTaste(number);
+              }}
+              length={10}
+            />
           </Stack>
           <Stack direction={"row"} gap={"10px"}>
             <Typography fontSize={"18px"}>Sort:</Typography>

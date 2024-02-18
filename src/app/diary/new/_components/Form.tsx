@@ -1,11 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, Divider, Step, StepLabel, Stepper, Typography } from "@mui/material";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { EquipmentForm } from "./EquipmentForm";
 import { ProcessForm } from "./ProccessForm";
 import { Evaluation } from "./Evaluation";
+import { CreateDiaryInput, useCreateDiaryForm } from "@/domains/forms/create-diary";
+import { useRouter } from "next/navigation";
 
 type FormProps = {
   data: any;
@@ -14,35 +16,38 @@ type FormProps = {
 const steps = ["equipment", "process", "evaluation"];
 
 const Form: React.FC<FormProps> = ({ data }) => {
-  const { register, handleSubmit, reset, control, watch } = useForm<DiaryFormValues>({
-    defaultValues: {
-      bottleId: 1,
-      bowlId: 1,
-      hmsId: 1,
-      charcoalId: 1,
-      flavor: [{}],
-    },
-  });
   const [activeStep, setActiveStep] = React.useState<number>(0);
+  const router = useRouter();
 
   const handleNext = () => setActiveStep((prevActiveStep) => prevActiveStep + 1);
   const handleBack = () => setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  const handleReset = () => setActiveStep(0);
+  //const handleReset = () => setActiveStep(0);
 
-  const onSubmit: SubmitHandler<DiaryFormValues> = (data) => {
+  const onSubmit: SubmitHandler<CreateDiaryInput> = (data) => {
     alert(JSON.stringify(data));
-    reset();
-    handleReset();
+    router.push("/diary");
   };
+
+  const methods = useCreateDiaryForm();
+  const [flavors, setFlavors] = useState<Flavor[]>([{ brandName: "", id: "", amount: undefined }]);
+  const [fileName, setFileName] = useState("");
 
   const changeFormComponent = () => {
     switch (activeStep) {
       case 0:
-        return <EquipmentForm register={register} control={control} data={data} />;
+        return (
+          <EquipmentForm
+            data={data}
+            flavors={flavors}
+            setFlavors={setFlavors}
+            fileName={fileName}
+            setFileName={setFileName}
+          />
+        );
       case 1:
-        return <ProcessForm register={register} control={control} />;
+        return <ProcessForm />;
       case 2:
-        return <Evaluation register={register} control={control} />;
+        return <Evaluation />;
       default:
         return null;
     }
@@ -59,29 +64,34 @@ const Form: React.FC<FormProps> = ({ data }) => {
       </Stepper>
       <Divider light />
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {activeStep === steps.length ? (
-          <Box>
-            <Typography sx={{ mt: 2, mb: 1 }}>All steps completed - you&apos;re finished</Typography>
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-              <Box sx={{ flex: "1 1 auto" }} />
-              <Button type="submit">Submit</Button>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
+          {activeStep === steps.length ? (
+            <Box>
+              <Typography sx={{ mt: 2, mb: 1 }}>All steps completed - you&apos;re finished</Typography>
+              <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                <Button disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
+                  Back
+                </Button>
+                <Box sx={{ flex: "1 1 auto" }} />
+                <Button type="submit">Submit</Button>
+              </Box>
             </Box>
-          </Box>
-        ) : (
-          <Box>
-            <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-            {changeFormComponent()}
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-              <Button disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
-                Back
-              </Button>
-              <Box sx={{ flex: "1 1 auto" }} />
-              <Button onClick={handleNext}>{activeStep === steps.length - 1 ? "Finish" : "Next"}</Button>
+          ) : (
+            <Box>
+              <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+              {changeFormComponent()}
+              <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                <Button disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
+                  Back
+                </Button>
+                <Box sx={{ flex: "1 1 auto" }} />
+                <Button onClick={handleNext}>{activeStep === steps.length - 1 ? "Finish" : "Next"}</Button>
+              </Box>
             </Box>
-          </Box>
-        )}
-      </form>
+          )}
+        </form>
+      </FormProvider>
     </Box>
   );
 };

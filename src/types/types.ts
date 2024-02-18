@@ -4,8 +4,8 @@ type Diary = {
 };
 
 type Flavor = {
-  brandId: string;
-  tasteId: string;
+  brandName: string;
+  id: string;
   amount: number | undefined;
 };
 
@@ -19,4 +19,10 @@ type DiaryFormValues = {
   flavor: Flavor[];
   process: string;
   eval: string;
+};
+
+type FlavorList = {
+  id: string;
+  flavor_name: string;
+  brand_name: string;
 };

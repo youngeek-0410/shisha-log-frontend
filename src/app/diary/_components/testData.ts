@@ -1,14 +1,14 @@
 // test data
-export const flavors = [
-  { id: 1, name: "David" },
-  { id: 2, name: "John" },
-  { id: 3, name: "Ken" },
-  { id: 4, name: "Walker" },
-  { id: 5, name: "Jin" },
-  { id: 6, name: "Avicii" },
-  { id: 7, name: "Paul van dyk" },
-  { id: 8, name: "Armin ban Buuren" },
-  { id: 9, name: "Kevin" },
+export const flavorList = [
+  { id: 1, flavor_name: "David", brand_name: "Anan" },
+  { id: 2, flavor_name: "John", brand_name: "Anan" },
+  { id: 3, flavor_name: "Ken", brand_name: "Ken" },
+  { id: 4, flavor_name: "Walker", brand_name: "Syankus" },
+  { id: 5, flavor_name: "Jin", brand_name: "Sinken" },
+  { id: 6, flavor_name: "Avicii", brand_name: "Janken" },
+  { id: 7, flavor_name: "Paul van dyk", brand_name: "Sake" },
+  { id: 8, flavor_name: "Armin ban Buuren", brand_name: "Saki" },
+  { id: 9, flavor_name: "Kevin", brand_name: "Kami" },
 ];
 
 type Flavor = {
@@ -29,10 +29,10 @@ export const diaries = [
   {
     id: 1,
     diary_flavor_list: [
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
     ],
     create_date: new Date(2023, 11, 5),
     creator_evaluation: 1,
@@ -41,10 +41,10 @@ export const diaries = [
   {
     id: 2,
     diary_flavor_list: [
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "John", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.2 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 2, flavor_name: "John", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.2 },
     ],
     create_date: new Date(2023, 11, 30),
     creator_evaluation: 3,
@@ -53,10 +53,10 @@ export const diaries = [
   {
     id: 3,
     diary_flavor_list: [
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.5 },
-      { flavor_name: "Kevin", brand_name: "Afzal", amount: 10 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.5 },
+      { id: 3, flavor_name: "Kevin", brand_name: "Afzal", amount: 10 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
     ],
     create_date: new Date(2023, 11, 9),
     creator_evaluation: 5,
@@ -65,10 +65,10 @@ export const diaries = [
   {
     id: 4,
     diary_flavor_list: [
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
     ],
     create_date: new Date(2023, 11, 5),
     creator_evaluation: 1,
@@ -77,10 +77,10 @@ export const diaries = [
   {
     id: 5,
     diary_flavor_list: [
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "John", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.2 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 2, flavor_name: "John", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.2 },
     ],
     create_date: new Date(2023, 11, 30),
     creator_evaluation: 3,
@@ -89,10 +89,10 @@ export const diaries = [
   {
     id: 6,
     diary_flavor_list: [
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.5 },
-      { flavor_name: "Kevin", brand_name: "Afzal", amount: 10 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.5 },
+      { id: 3, flavor_name: "Kevin", brand_name: "Afzal", amount: 10 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
     ],
     create_date: new Date(2023, 11, 9),
     creator_evaluation: 5,
@@ -101,10 +101,10 @@ export const diaries = [
   {
     id: 7,
     diary_flavor_list: [
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
     ],
     create_date: new Date(2023, 11, 5),
     creator_evaluation: 1,
@@ -113,10 +113,10 @@ export const diaries = [
   {
     id: 8,
     diary_flavor_list: [
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "John", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.2 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 2, flavor_name: "John", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.2 },
     ],
     create_date: new Date(2023, 11, 30),
     creator_evaluation: 3,
@@ -125,10 +125,10 @@ export const diaries = [
   {
     id: 9,
     diary_flavor_list: [
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.5 },
-      { flavor_name: "Kevin", brand_name: "Afzal", amount: 10 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.5 },
+      { id: 3, flavor_name: "Kevin", brand_name: "Afzal", amount: 10 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
     ],
     create_date: new Date(2023, 11, 9),
     creator_evaluation: 5,
@@ -137,10 +137,10 @@ export const diaries = [
   {
     id: 10,
     diary_flavor_list: [
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
     ],
     create_date: new Date(2023, 11, 5),
     creator_evaluation: 1,
@@ -149,10 +149,10 @@ export const diaries = [
   {
     id: 11,
     diary_flavor_list: [
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
-      { flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
+      { id: 1, flavor_name: "David", brand_name: "Afzal", amount: 3.6 },
     ],
     create_date: new Date(2023, 11, 5),
     creator_evaluation: 1,

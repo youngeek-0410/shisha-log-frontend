@@ -16,7 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useMemo, useState } from "react";
-import { diaries, flavors } from "./testData";
+import { diaries, flavorList } from "./testData";
 import { useDiariesPagination } from "@/hooks/useDiariesPagenation";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
@@ -52,7 +52,7 @@ export const Index: React.FC = () => {
       .filter(
         (diary) =>
           diary.diary_flavor_list.find((flavor) =>
-            selectedFlavors.find((selectedFlavor) => selectedFlavor.name == flavor.flavor_name)
+            selectedFlavors.find((selectedFlavor) => selectedFlavor.id == flavor.id)
           ) || selectedFlavors.length == 0
       )
       .filter((diary) => diary.creator_evaluation >= creator)
@@ -63,6 +63,9 @@ export const Index: React.FC = () => {
   const { page, setPage, hasNext, hasPrev } = useDiariesPagination({ diaries: shapedDiaries });
 
   const router = useRouter();
+  const flavors = flavorList.map((flavor) => {
+    return { name: flavor.flavor_name + " " + flavor.brand_name, id: flavor.id };
+  });
 
   return (
     <>

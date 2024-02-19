@@ -1,5 +1,12 @@
-import { Diary } from "@/app/diary/_components/testData";
 import { useEffect, useState } from "react";
+
+type Diary = {
+  id: string;
+  diary_flavor_list: DiaryFlavor[];
+  create_date: Date;
+  creator_evaluation: number;
+  taste_evaluation: number;
+};
 
 type Props = {
   diaries: Diary[];

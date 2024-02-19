@@ -10,6 +10,8 @@ import { CreateDiaryInput, useCreateDiaryForm } from "@/domains/forms/create-dia
 import { useRouter } from "next/navigation";
 import { GetEquimentsByUserIdResponse, useCreateDiaryByUserId } from "@/api/create-diary-form/equipment-form";
 import { generateDateString } from "@/utils/date";
+import { useDisclosure } from "@/hooks/useDisclosure";
+import { Toast } from "@/_components/Toast";
 
 type FormProps = {
   data: GetEquimentsByUserIdResponse;
@@ -101,7 +103,9 @@ const Form: React.FC<FormProps> = ({ data, userId }) => {
         onSuccess: () => {
           router.push("/diary");
         },
-        onError: () => {},
+        onError: () => {
+          onOpen();
+        },
       }
     );
   };
@@ -119,6 +123,7 @@ const Form: React.FC<FormProps> = ({ data, userId }) => {
     }
   };
 
+  const { onOpen, onClose, isOpen } = useDisclosure();
   return (
     <Box m={3}>
       <Stepper activeStep={activeStep} alternativeLabel sx={{ marginBottom: 2 }}>
@@ -158,6 +163,7 @@ const Form: React.FC<FormProps> = ({ data, userId }) => {
           )}
         </form>
       </FormProvider>
+      <Toast isOpen={isOpen} onClose={onClose} message="エラーが発生しました" type="error" />
     </Box>
   );
 };

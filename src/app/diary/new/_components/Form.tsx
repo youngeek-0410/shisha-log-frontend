@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Box, Button, Divider, Step, StepLabel, Stepper, Typography } from "@mui/material";
-import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
+import { SubmitHandler, FormProvider } from "react-hook-form";
 import { EquipmentForm } from "./EquipmentForm";
 import { ProcessForm } from "./ProccessForm";
 import { Evaluation } from "./Evaluation";
@@ -22,19 +22,56 @@ const Form: React.FC<FormProps> = ({ data, userId }) => {
   const [activeStep, setActiveStep] = React.useState<number>(0);
   const router = useRouter();
 
-  const handleNext = () => setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  const handleNext = () => {
+    if (activeStep == 0) {
+      const bottleId = getValues("bottle");
+      const bowlId = getValues("bowl");
+      const heatManagementId = getValues("heat_management");
+      const charcoalId = getValues("charcoal");
+      const flavorList = getValues("diary_flavor_list");
+      const temp = getValues("climate_temp");
+      const humidity = getValues("climate_humidity");
+
+      const isCompleteFlavorList = flavorList.every((flavor) => flavor.id && flavor.amount);
+      if (bottleId && bowlId && heatManagementId && charcoalId && isCompleteFlavorList && temp && humidity) {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        clearErrors("diary_flavor_list");
+      } else {
+        if (!bottleId) {
+          setError("bottle", { message: "Bottleは入力必須です" }, { shouldFocus: true });
+        }
+        if (!bowlId) {
+          setError("bowl", { message: "Bowlは入力必須です" }, { shouldFocus: true });
+        }
+        if (!heatManagementId) {
+          setError("heat_management", { message: "Heat Managementは入力必須です" }, { shouldFocus: true });
+        }
+        if (!charcoalId) {
+          setError("charcoal", { message: "Charcoalは入力必須です" }, { shouldFocus: true });
+        }
+        if (!isCompleteFlavorList) {
+          setError("diary_flavor_list", { message: "Flavorを完全に入力してください" });
+        }
+        if (!temp) {
+          setError("climate_temp", { message: "温度を入力してください" });
+        }
+        if (!humidity) {
+          setError("climate_humidity", { message: "湿度を入力してください" });
+        }
+      }
+    } else {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
+  };
   const handleBack = () => setActiveStep((prevActiveStep) => prevActiveStep - 1);
   //const handleReset = () => setActiveStep(0);
 
   const methods = useCreateDiaryForm();
-  const [flavors, setFlavors] = useState<FlavorFormValue[]>([{ id: "", amount: undefined, name: "" }]);
+  const { getValues, setError, clearErrors } = methods;
   const [fileName, setFileName] = useState("");
 
   const createDiary = useCreateDiaryByUserId();
   const onSubmit: SubmitHandler<CreateDiaryInput> = (data) => {
-    const flavorsFormValue = flavors.map((flavor) => {
-      return { id: flavor.id, amount: flavor.amount };
-    });
     createDiary.mutate(
       {
         user_id: userId,
@@ -48,7 +85,7 @@ const Form: React.FC<FormProps> = ({ data, userId }) => {
             humidity: data.climate_humidity,
           },
         },
-        diary_flavor_list: flavorsFormValue as { id: string; amount: number }[],
+        diary_flavor_list: data.diary_flavor_list,
         image: data.image,
         sucking_text: data.sucking_text,
         review: {
@@ -72,15 +109,7 @@ const Form: React.FC<FormProps> = ({ data, userId }) => {
   const changeFormComponent = () => {
     switch (activeStep) {
       case 0:
-        return (
-          <EquipmentForm
-            data={data}
-            flavors={flavors}
-            setFlavors={setFlavors}
-            fileName={fileName}
-            setFileName={setFileName}
-          />
-        );
+        return <EquipmentForm data={data} fileName={fileName} setFileName={setFileName} />;
       case 1:
         return <ProcessForm />;
       case 2:

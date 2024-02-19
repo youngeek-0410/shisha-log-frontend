@@ -19,28 +19,28 @@ import CustomHeading from "@/_components/customHeading";
 import { ControlledInput, Input } from "@/_components/form/Input";
 import { EquipmentSelecter } from "@/_components/form/EquipmentSelecter";
 import { GetEquimentsByUserIdResponse } from "@/api/create-diary-form/equipment-form";
+import { ErrorMessage } from "@/_components/form/ErrorMessage";
 
 type EquipmentFormProps = {
   data: GetEquimentsByUserIdResponse;
-  flavors: FlavorFormValue[];
-  setFlavors: Dispatch<SetStateAction<FlavorFormValue[]>>;
   fileName: string;
   setFileName: Dispatch<SetStateAction<string>>;
 };
 
-export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, flavors, setFlavors, fileName, setFileName }) => {
+export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, fileName, setFileName }) => {
   const flavorList = data.user_flavor_list.map((flavor) => {
     return { id: flavor.id, name: flavor.brand_name + " " + flavor.flavor_name };
   });
 
-  const { register, control, setValue } = useFormContext();
+  const {
+    register,
+    control,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useFormContext();
   const inputFileRef = useRef<HTMLInputElement>(null);
-
-  // const brandNames = useMemo(() => {
-  //   return flavorList
-  //     .map((flavor) => flavor.brand_name)
-  //     .filter((brandName, index, self) => self.indexOf(brandName) == index);
-  // }, [flavorList]);
+  const flavors: { id: string; amount: number }[] = watch("diary_flavor_list");
 
   return (
     <>
@@ -50,28 +50,28 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, flavors, set
         </Box>
 
         <Box display="flex" flexDirection="column" gap={1}>
-          <EquipmentSelecter control={control} name={"bottle"} label={"Bottle"}>
+          <EquipmentSelecter control={control} name={"bottle"} label={"Bottle"} errors={errors}>
             {data.user_bottle_list.map((bottle) => (
               <MenuItem key={bottle.id} value={bottle.id}>
                 {bottle.bottle_name}
               </MenuItem>
             ))}
           </EquipmentSelecter>
-          <EquipmentSelecter control={control} name={"bowl"} label={"Bowl"}>
+          <EquipmentSelecter control={control} name={"bowl"} label={"Bowl"} errors={errors}>
             {data.user_bowl_list.map((bowl) => (
               <MenuItem key={bowl.id} value={bowl.id}>
                 {bowl.bowl_name}
               </MenuItem>
             ))}
           </EquipmentSelecter>
-          <EquipmentSelecter control={control} name={"heat_management"} label={"Heat Management"}>
+          <EquipmentSelecter control={control} name={"heat_management"} label={"Heat Management"} errors={errors}>
             {data.user_heat_management_list.map((heat_management) => (
               <MenuItem key={heat_management.id} value={heat_management.id}>
                 {heat_management.heat_management_name}
               </MenuItem>
             ))}
           </EquipmentSelecter>
-          <EquipmentSelecter control={control} name={"charcoal"} label={"Charcoal"}>
+          <EquipmentSelecter control={control} name={"charcoal"} label={"Charcoal"} errors={errors}>
             {data.user_charcoal_list.map((charcoal) => (
               <MenuItem key={charcoal.id} value={charcoal.id}>
                 {charcoal.charcoal_name}
@@ -83,6 +83,7 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, flavors, set
         <Box display="flex" alignItems="center">
           <Typography>Climate :</Typography>
           <Input
+            disableErrorMessage
             type="number"
             {...register("climate_temp")}
             inputProps={{
@@ -95,6 +96,7 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, flavors, set
           <Typography>℃,</Typography>
 
           <Input
+            disableErrorMessage
             type="number"
             {...register("climate_humidity")}
             inputProps={{
@@ -106,6 +108,8 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, flavors, set
           />
           <Typography>%</Typography>
         </Box>
+        <ErrorMessage name={"climate_temp"} errors={errors} />
+        <ErrorMessage name={"climate_humidity"} errors={errors} />
       </Box>
 
       <Box mb={2}>
@@ -125,21 +129,21 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, flavors, set
 
           <Stack>
             <Grid container spacing={1} alignItems="center" mb={1}>
-              {flavors.map((flavor, index) => (
+              {flavors?.map((flavor, index) => (
                 <>
                   <Grid item xs={6} textAlign="center">
                     <FormControl sx={{ width: "80%" }} size="small">
                       <Autocomplete
                         disablePortal
                         options={flavorList}
+                        value={flavorList.find((tmp) => tmp.id == flavor.id)}
                         getOptionLabel={(flavor) => flavor.name}
                         onChange={(_, value) =>
                           value &&
-                          setFlavors(
-                            flavors.map((flavor, interIndex) => {
-                              return index == interIndex
-                                ? { id: value?.id, amount: flavor.amount, name: value?.name }
-                                : flavor;
+                          setValue(
+                            "diary_flavor_list",
+                            flavors?.map((flavor, interIndex) => {
+                              return index == interIndex ? { id: value?.id, amount: flavor.amount } : flavor;
                             })
                           )
                         }
@@ -152,12 +156,14 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, flavors, set
                       <Box display={"flex"}>
                         <Input
                           type="number"
+                          errors={errors}
                           value={flavor.amount}
                           onChange={(e) => {
-                            setFlavors(
-                              flavors.map((flavor, interIndex) => {
+                            setValue(
+                              "diary_flavor_list",
+                              flavors?.map((flavor, interIndex) => {
                                 return index == interIndex
-                                  ? { name: flavor.name, id: flavor.id, amount: Number(e.target.value) }
+                                  ? { id: flavor.id, amount: e.target.value && Number(e.target.value) }
                                   : flavor;
                               })
                             );
@@ -174,11 +180,12 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, flavors, set
               aria-label="add flavor"
               color="primary"
               onClick={() => {
-                setFlavors([...flavors, { name: "", id: "", amount: undefined }]);
+                setValue("diary_flavor_list", [...flavors, { id: "", amount: undefined }]);
               }}
             >
               <AddCircleOutlineIcon />
             </IconButton>
+            <ErrorMessage name="diary_flavor_list" errors={errors} />
           </Stack>
         </Box>
 
@@ -191,6 +198,7 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, flavors, set
             color="primary"
             sx={{ width: "100%" }}
             {...register("serve_text")}
+            errors={errors}
           />
         </Box>
 

@@ -10,6 +10,15 @@ const schema = yup.object().shape({
   charcoal: yup.string().required("Charcoalの選択は必須です"),
   climate_temp: yup.number().required("Climateの温度は必須です").typeError("Climateの温度は数字で入力してください"),
   climate_humidity: yup.number().required("Climateの湿度は必須です").typeError("Climateの湿度は数字で入力してください"),
+  diary_flavor_list: yup
+    .array()
+    .of(
+      yup.object({
+        id: yup.string().required("Flavorは選択する必要があります"),
+        amount: yup.number().required("数量を入力する必要があります"),
+      })
+    )
+    .required("Flavorは必須項目です"),
   // special
   image: yup.string(),
   serve_text: yup.string().max(255, "Serveは255文字までの入力です"),
@@ -26,5 +35,9 @@ const schema = yup.object().shape({
 export type CreateDiaryInput = yup.InferType<typeof schema>;
 
 export const useCreateDiaryForm = () => {
-  return useForm<CreateDiaryInput>({ resolver: yupResolver(schema), mode: "onChange" });
+  return useForm<CreateDiaryInput>({
+    resolver: yupResolver(schema),
+    mode: "onChange",
+    defaultValues: { diary_flavor_list: [{ id: undefined, amount: undefined }] },
+  });
 };

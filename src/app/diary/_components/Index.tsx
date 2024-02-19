@@ -16,20 +16,23 @@ import {
   Typography,
 } from "@mui/material";
 import { useMemo, useState } from "react";
-import { diaries, flavorList } from "./testData";
 import { useDiariesPagination } from "@/hooks/useDiariesPagenation";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import { useRouter } from "next/navigation";
+import { GetDiariesByUserIdResponse } from "@/api/diary-index";
+import { generateDateFromString } from "@/utils/date";
 
-export const Index: React.FC = () => {
+export const Index = ({ data }: { data: GetDiariesByUserIdResponse }) => {
   const [creator, setCreator] = useState(-1);
   const [taste, setTaste] = useState(-1);
   const [sortTerms, setSortTerms] = useState({ date: "none", creator: "none", taste: "none" });
-  const [selectedFlavors, setSelectedFlavors] = useState<{ id: Number; name: string }[]>([]);
+  const [selectedFlavors, setSelectedFlavors] = useState<{ id: string; name: string }[]>([]);
 
   const shapedDiaries = useMemo(() => {
-    let tmpDiaries = diaries;
+    let tmpDiaries = data.user_diary_list.map((diary) => {
+      return { ...diary, create_date: generateDateFromString(diary.create_date) };
+    });
     if (sortTerms.date != "none") {
       tmpDiaries =
         sortTerms.date == "desc"
@@ -57,15 +60,17 @@ export const Index: React.FC = () => {
       )
       .filter((diary) => diary.creator_evaluation >= creator)
       .filter((diary) => diary.taste_evaluation >= taste);
-  }, [sortTerms, creator, taste, selectedFlavors]);
+  }, [sortTerms, creator, taste, selectedFlavors, data.user_diary_list]);
 
   // page
   const { page, setPage, hasNext, hasPrev } = useDiariesPagination({ diaries: shapedDiaries });
 
   const router = useRouter();
-  const flavors = flavorList.map((flavor) => {
-    return { name: flavor.flavor_name + " " + flavor.brand_name, id: flavor.id };
-  });
+  const flavors = data.user_diary_list
+    .flatMap((diary) => diary.diary_flavor_list)
+    .map((flavor) => {
+      return { name: flavor.flavor_name + " " + flavor.brand_name, id: flavor.id };
+    });
 
   return (
     <>

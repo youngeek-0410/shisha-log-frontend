@@ -8,14 +8,17 @@ import { ProcessForm } from "./ProccessForm";
 import { Evaluation } from "./Evaluation";
 import { CreateDiaryInput, useCreateDiaryForm } from "@/domains/forms/create-diary";
 import { useRouter } from "next/navigation";
+import { GetEquimentsByUserIdResponse, useCreateDiaryByUserId } from "@/api/create-diary-form/equipment-form";
+import { generateDateString } from "@/utils/date";
 
 type FormProps = {
-  data: any;
+  data: GetEquimentsByUserIdResponse;
+  userId: string;
 };
 
 const steps = ["equipment", "process", "evaluation"];
 
-const Form: React.FC<FormProps> = ({ data }) => {
+const Form: React.FC<FormProps> = ({ data, userId }) => {
   const [activeStep, setActiveStep] = React.useState<number>(0);
   const router = useRouter();
 
@@ -23,14 +26,48 @@ const Form: React.FC<FormProps> = ({ data }) => {
   const handleBack = () => setActiveStep((prevActiveStep) => prevActiveStep - 1);
   //const handleReset = () => setActiveStep(0);
 
-  const onSubmit: SubmitHandler<CreateDiaryInput> = (data) => {
-    alert(JSON.stringify(data));
-    router.push("/diary");
-  };
-
   const methods = useCreateDiaryForm();
-  const [flavors, setFlavors] = useState<Flavor[]>([{ brandName: "", id: "", amount: undefined }]);
+  const [flavors, setFlavors] = useState<FlavorFormValue[]>([{ id: "", amount: undefined, name: "" }]);
   const [fileName, setFileName] = useState("");
+
+  const createDiary = useCreateDiaryByUserId();
+  const onSubmit: SubmitHandler<CreateDiaryInput> = (data) => {
+    const flavorsFormValue = flavors.map((flavor) => {
+      return { id: flavor.id, amount: flavor.amount };
+    });
+    createDiary.mutate(
+      {
+        user_id: userId,
+        equipments: {
+          bottle_id: data.bottle,
+          bowl_id: data.bowl,
+          heat_management_id: data.heat_management,
+          charcoal_id: data.charcoal,
+          climate: {
+            temperature: data.climate_temp,
+            humidity: data.climate_humidity,
+          },
+        },
+        diary_flavor_list: flavorsFormValue as { id: string; amount: number }[],
+        image: data.image,
+        sucking_text: data.sucking_text,
+        review: {
+          creator_evaluation: data.creator_evaluation,
+          taste_evaluation: data.taste_evaluation,
+          creator_good_points: data.creator_good_points,
+          creator_bad_points: data.creator_bad_points,
+          taste_comments: data.taste_comments,
+        },
+        create_date: generateDateString(),
+      },
+      {
+        onSuccess: () => {
+          router.push("/diary");
+        },
+        onError: () => {},
+      }
+    );
+  };
 
   const changeFormComponent = () => {
     switch (activeStep) {

@@ -1,71 +1,46 @@
 "use client";
 
-import React, { ChangeEvent, Dispatch, SetStateAction, useMemo, useRef, useState } from "react";
-import { Box, Grid, Select, MenuItem, Button, Typography, FormControl, IconButton, Stack } from "@mui/material";
+import React, { ChangeEvent, Dispatch, SetStateAction, useMemo, useRef } from "react";
+import {
+  Box,
+  Grid,
+  MenuItem,
+  Button,
+  Typography,
+  FormControl,
+  IconButton,
+  Stack,
+  Autocomplete,
+  TextField,
+} from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CustomHeading from "@/_components/customHeading";
 import { ControlledInput, Input } from "@/_components/form/Input";
 import { EquipmentSelecter } from "@/_components/form/EquipmentSelecter";
+import { GetEquimentsByUserIdResponse } from "@/api/create-diary-form/equipment-form";
 
 type EquipmentFormProps = {
-  data: any;
-  flavors: Flavor[];
-  setFlavors: Dispatch<SetStateAction<Flavor[]>>;
+  data: GetEquimentsByUserIdResponse;
+  flavors: FlavorFormValue[];
+  setFlavors: Dispatch<SetStateAction<FlavorFormValue[]>>;
   fileName: string;
   setFileName: Dispatch<SetStateAction<string>>;
 };
 
-type equipmentItem = {
-  itemData: any;
-  name: string;
-  label: string;
-};
-
-const flavorList: FlavorList[] = [
-  { id: "631437-2jd8-1is9-3js8-fb22a0fhwi41", flavor_name: "EarlGrey", brand_name: "Afzal" },
-  { id: "631437-2jd8-1is9-3js8-fb22a0fhwi42", flavor_name: "Peach", brand_name: "Afzal" },
-  { id: "631437-2jd8-1is9-3js8-fb22a0fhwi43", flavor_name: "Orange", brand_name: "Kenny" },
-  { id: "631437-2jd8-1is9-3js8-fb22a0fhwi44", flavor_name: "Apple", brand_name: "Kenny" },
-];
-
 export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, flavors, setFlavors, fileName, setFileName }) => {
-  const equipmentItemList: equipmentItem[] = [
-    {
-      itemData: data,
-      name: "bottle",
-      label: "Bottle",
-    },
-    {
-      itemData: data,
-      name: "bowl",
-      label: "Bowl",
-    },
-    {
-      itemData: data,
-      name: "heat_management",
-      label: "Heat Management",
-    },
-    {
-      itemData: data,
-      name: "charcoal",
-      label: "Charcoal",
-    },
-  ];
+  const flavorList = data.user_flavor_list.map((flavor) => {
+    return { id: flavor.id, name: flavor.brand_name + " " + flavor.flavor_name };
+  });
 
   const { register, control, setValue } = useFormContext();
   const inputFileRef = useRef<HTMLInputElement>(null);
 
-  const brandNames = useMemo(() => {
-    return flavorList
-      .map((flavor) => flavor.brand_name)
-      .filter((brandName, index, self) => self.indexOf(brandName) == index);
-  }, [flavorList]);
-  const flavorsList = useMemo(() => {
-    return flavors.map((flavor) => {
-      return flavor.brandName ? flavorList.filter((apiFlavor) => apiFlavor.brand_name == flavor.brandName) : flavorList;
-    });
-  }, [flavorList, flavors]);
+  // const brandNames = useMemo(() => {
+  //   return flavorList
+  //     .map((flavor) => flavor.brand_name)
+  //     .filter((brandName, index, self) => self.indexOf(brandName) == index);
+  // }, [flavorList]);
 
   return (
     <>
@@ -75,16 +50,34 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, flavors, set
         </Box>
 
         <Box display="flex" flexDirection="column" gap={1}>
-          {equipmentItemList &&
-            equipmentItemList.map((v, i) => (
-              <EquipmentSelecter
-                key={i}
-                control={control}
-                data={v.itemData}
-                name={v.name}
-                label={v.label}
-              ></EquipmentSelecter>
+          <EquipmentSelecter control={control} name={"bottle"} label={"Bottle"}>
+            {data.user_bottle_list.map((bottle) => (
+              <MenuItem key={bottle.id} value={bottle.id}>
+                {bottle.bottle_name}
+              </MenuItem>
             ))}
+          </EquipmentSelecter>
+          <EquipmentSelecter control={control} name={"bowl"} label={"Bowl"}>
+            {data.user_bowl_list.map((bowl) => (
+              <MenuItem key={bowl.id} value={bowl.id}>
+                {bowl.bowl_name}
+              </MenuItem>
+            ))}
+          </EquipmentSelecter>
+          <EquipmentSelecter control={control} name={"heat_management"} label={"Heat Management"}>
+            {data.user_heat_management_list.map((heat_management) => (
+              <MenuItem key={heat_management.id} value={heat_management.id}>
+                {heat_management.heat_management_name}
+              </MenuItem>
+            ))}
+          </EquipmentSelecter>
+          <EquipmentSelecter control={control} name={"charcoal"} label={"Charcoal"}>
+            {data.user_charcoal_list.map((charcoal) => (
+              <MenuItem key={charcoal.id} value={charcoal.id}>
+                {charcoal.charcoal_name}
+              </MenuItem>
+            ))}
+          </EquipmentSelecter>
         </Box>
 
         <Box display="flex" alignItems="center">
@@ -122,13 +115,10 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, flavors, set
       <Stack spacing={1}>
         <Box>
           <Grid container spacing={1} alignItems="center" mb={1}>
-            <Grid item xs={4} textAlign="center">
-              <Typography>Brand:</Typography>
+            <Grid item xs={6} textAlign="center">
+              <Typography>Flavor:</Typography>
             </Grid>
-            <Grid item xs={4} textAlign="center">
-              <Typography>Taste:</Typography>
-            </Grid>
-            <Grid item xs={4} textAlign="center">
+            <Grid item xs={6} textAlign="center">
               <Typography>Weight:</Typography>
             </Grid>
           </Grid>
@@ -137,51 +127,27 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, flavors, set
             <Grid container spacing={1} alignItems="center" mb={1}>
               {flavors.map((flavor, index) => (
                 <>
-                  <Grid item xs={4} textAlign="center">
+                  <Grid item xs={6} textAlign="center">
                     <FormControl sx={{ width: "80%" }} size="small">
-                      <Select
-                        value={flavor.brandName}
-                        onChange={(e) => {
+                      <Autocomplete
+                        disablePortal
+                        options={flavorList}
+                        getOptionLabel={(flavor) => flavor.name}
+                        onChange={(_, value) =>
+                          value &&
                           setFlavors(
                             flavors.map((flavor, interIndex) => {
                               return index == interIndex
-                                ? { brandName: e.target.value, id: flavor.id, amount: flavor.amount }
+                                ? { id: value?.id, amount: flavor.amount, name: value?.name }
                                 : flavor;
                             })
-                          );
-                        }}
-                      >
-                        {brandNames.map((brandName, index) => (
-                          <MenuItem value={brandName} key={"brandName" + index}>
-                            {brandName}
-                          </MenuItem>
-                        ))}
-                      </Select>
+                          )
+                        }
+                        renderInput={(params) => <TextField {...params} label="Select flavors" placeholder="Flavors" />}
+                      />
                     </FormControl>
                   </Grid>
-                  <Grid item xs={4} textAlign="center">
-                    <FormControl sx={{ width: "80%" }} size="small">
-                      <Select
-                        value={flavor.id}
-                        onChange={(e) => {
-                          setFlavors(
-                            flavors.map((flavor, interIndex) => {
-                              return index == interIndex
-                                ? { brandName: flavor.brandName, id: e.target.value, amount: flavor.amount }
-                                : flavor;
-                            })
-                          );
-                        }}
-                      >
-                        {flavorsList[index].map((flavorList, index) => (
-                          <MenuItem value={flavorList.id} key={"flavorList" + index}>
-                            {flavorList.flavor_name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={4} textAlign="center">
+                  <Grid item xs={6} textAlign="center">
                     <FormControl sx={{ width: "80%" }} size="small">
                       <Box display={"flex"}>
                         <Input
@@ -191,7 +157,7 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, flavors, set
                             setFlavors(
                               flavors.map((flavor, interIndex) => {
                                 return index == interIndex
-                                  ? { brandName: flavor.brandName, id: flavor.id, amount: Number(e.target.value) }
+                                  ? { name: flavor.name, id: flavor.id, amount: Number(e.target.value) }
                                   : flavor;
                               })
                             );
@@ -208,7 +174,7 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, flavors, set
               aria-label="add flavor"
               color="primary"
               onClick={() => {
-                setFlavors([...flavors, { brandName: "", id: "", amount: undefined }]);
+                setFlavors([...flavors, { name: "", id: "", amount: undefined }]);
               }}
             >
               <AddCircleOutlineIcon />

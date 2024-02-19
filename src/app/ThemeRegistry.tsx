@@ -7,6 +7,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../theme";
 import React from "react";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 export default function ThemeRegistry(props: { options: any; children: React.ReactNode }) {
   const { options, children } = props;
@@ -51,12 +52,16 @@ export default function ThemeRegistry(props: { options: any; children: React.Rea
     );
   });
 
+  const client = new QueryClient();
+
   return (
-    <CacheProvider value={cache}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {children}
-      </ThemeProvider>
-    </CacheProvider>
+    <QueryClientProvider client={client}>
+      <CacheProvider value={cache}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          {children}
+        </ThemeProvider>
+      </CacheProvider>
+    </QueryClientProvider>
   );
 }

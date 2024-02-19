@@ -18,8 +18,8 @@ type Flavor = {
 };
 
 export type Diary = {
-  id: number;
-  diary_flavor_list: Flavor[];
+  id: string;
+  diary_flavor_list: DiaryFlavor[];
   create_date: Date;
   creator_evaluation: number;
   taste_evaluation: number;

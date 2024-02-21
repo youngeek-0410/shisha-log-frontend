@@ -1,12 +1,11 @@
-import { Input as RHFInput, InputProps as ChakraInput } from "@mui/material";
+import { Input as RHFInput, InputProps as MuiInput } from "@mui/material";
 import { InputHTMLAttributes, Ref, forwardRef } from "react";
 import { Controller, FieldErrorsImpl, FieldPath, FieldValues, UseControllerProps } from "react-hook-form";
 import { ErrorMessage } from "./ErrorMessage";
 
-type InputProps = { errors?: FieldErrorsImpl; disableErrorMessage?: boolean } & ChakraInput;
+type InputProps = { errors?: FieldErrorsImpl; disableErrorMessage?: boolean } & MuiInput;
 
 const WrapInput = (props: InputProps, ref: Ref<HTMLInputElement>) => {
-  console.log(props.errors, props.disableErrorMessage);
   return (
     <>
       <RHFInput ref={ref} {...props} />
@@ -45,5 +44,6 @@ export const ControlledInput = forwardRef<
   HTMLInputElement,
   Omit<InputHTMLAttributes<HTMLInputElement>, "ref"> & ControlInputProps<any, any>
 >(WrapControlledInput) as <TFieldValues extends FieldValues, TName extends FieldPath<TFieldValues>>(
-  p: Omit<ChakraInput, "ref"> & ControlInputProps<TFieldValues, TName> & { ref?: Ref<HTMLInputElement> }
+  p: Omit<InputHTMLAttributes<HTMLInputElement>, "ref"> &
+    ControlInputProps<TFieldValues, TName> & { ref?: Ref<HTMLInputElement> }
 ) => JSX.Element;

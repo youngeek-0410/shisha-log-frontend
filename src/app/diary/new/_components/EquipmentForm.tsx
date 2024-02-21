@@ -208,6 +208,7 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, fileName, se
             name="image"
             control={control}
             type="file"
+            accept="image/*"
             value={""}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
               const files = e.currentTarget.files;

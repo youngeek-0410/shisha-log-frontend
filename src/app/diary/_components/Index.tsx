@@ -16,7 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useMemo, useState } from "react";
-import { useDiariesPagination } from "@/hooks/useDiariesPagenation";
+import { useDiariesPagination } from "@/hooks/useDiariesPagination";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import { useRouter } from "next/navigation";
@@ -77,7 +77,7 @@ export const Index = ({ data }: { data: GetDiariesByUserIdResponse }) => {
       <Stack gap={"10px"}>
         <Stack gap={"10px"}>
           <CustomHeading>Narrowing down</CustomHeading>
-          <Typography fontSize={"18px"}>Fravor:</Typography>
+          <Typography fontSize={"18px"}>Flavor:</Typography>
           <Autocomplete
             multiple
             id="tags-outlined"
@@ -156,7 +156,7 @@ export const Index = ({ data }: { data: GetDiariesByUserIdResponse }) => {
           <CustomHeading>Lists</CustomHeading>
           <Stack flexDirection={"row"} textAlign={"center"} color={"text.secondary"} mt={"20px"}>
             <Box flexGrow={"1"} p={"5px"} border={"1px solid"} borderColor={"primary.main"}>
-              <Typography fontSize={"14px"}>Fravor</Typography>
+              <Typography fontSize={"14px"}>Flavor</Typography>
             </Box>
             <Box p={"5px"} minWidth={"55px"} border={"1px solid"} borderColor={"primary.main"} borderLeft={"0px"}>
               <Typography fontSize={"14px"}>Day</Typography>

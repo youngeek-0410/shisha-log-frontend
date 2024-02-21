@@ -2,7 +2,7 @@ import { client } from "@/utils/client";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-export type GetEquimentsByUserIdResponse = {
+export type GetEquipmentsByUserIdResponse = {
   user_flavor_list: FlavorList[];
   user_bottle_list: Bottle[];
   user_bowl_list: Bowl[];
@@ -10,10 +10,10 @@ export type GetEquimentsByUserIdResponse = {
   user_charcoal_list: Charcoal[];
 };
 
-export const useGetEquimentsByUserId = (userId: string, enabled: boolean) => {
-  return useQuery<GetEquimentsByUserIdResponse, AxiosError>({
+export const useGetEquipmentsByUserId = (userId: string, enabled: boolean) => {
+  return useQuery<GetEquipmentsByUserIdResponse, AxiosError>({
     queryKey: ["user-equipments"],
-    queryFn: () => client.get<GetEquimentsByUserIdResponse>(`/user/${userId}/equipment`).then((res) => res.data),
+    queryFn: () => client.get<GetEquipmentsByUserIdResponse>(`/user/${userId}/equipment`).then((res) => res.data),
     enabled: enabled,
   });
 };

@@ -17,12 +17,12 @@ import { useFormContext } from "react-hook-form";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CustomHeading from "@/_components/customHeading";
 import { ControlledInput, Input } from "@/_components/form/Input";
-import { EquipmentSelecter } from "@/_components/form/EquipmentSelecter";
-import { GetEquimentsByUserIdResponse } from "@/api/create-diary-form/equipment-form";
+import { EquipmentSelector } from "@/_components/form/EquipmentSelector";
+import { GetEquipmentsByUserIdResponse } from "@/api/create-diary-form/equipment-form";
 import { ErrorMessage } from "@/_components/form/ErrorMessage";
 
 type EquipmentFormProps = {
-  data: GetEquimentsByUserIdResponse;
+  data: GetEquipmentsByUserIdResponse;
   fileName: string;
   setFileName: Dispatch<SetStateAction<string>>;
 };
@@ -50,34 +50,34 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, fileName, se
         </Box>
 
         <Box display="flex" flexDirection="column" gap={1}>
-          <EquipmentSelecter control={control} name={"bottle"} label={"Bottle"} errors={errors}>
+          <EquipmentSelector control={control} name={"bottle"} label={"Bottle"} errors={errors}>
             {data.user_bottle_list.map((bottle) => (
               <MenuItem key={bottle.id} value={bottle.id}>
                 {bottle.bottle_name}
               </MenuItem>
             ))}
-          </EquipmentSelecter>
-          <EquipmentSelecter control={control} name={"bowl"} label={"Bowl"} errors={errors}>
+          </EquipmentSelector>
+          <EquipmentSelector control={control} name={"bowl"} label={"Bowl"} errors={errors}>
             {data.user_bowl_list.map((bowl) => (
               <MenuItem key={bowl.id} value={bowl.id}>
                 {bowl.bowl_name}
               </MenuItem>
             ))}
-          </EquipmentSelecter>
-          <EquipmentSelecter control={control} name={"heat_management"} label={"Heat Management"} errors={errors}>
+          </EquipmentSelector>
+          <EquipmentSelector control={control} name={"heat_management"} label={"Heat Management"} errors={errors}>
             {data.user_heat_management_list.map((heat_management) => (
               <MenuItem key={heat_management.id} value={heat_management.id}>
                 {heat_management.heat_management_name}
               </MenuItem>
             ))}
-          </EquipmentSelecter>
-          <EquipmentSelecter control={control} name={"charcoal"} label={"Charcoal"} errors={errors}>
+          </EquipmentSelector>
+          <EquipmentSelector control={control} name={"charcoal"} label={"Charcoal"} errors={errors}>
             {data.user_charcoal_list.map((charcoal) => (
               <MenuItem key={charcoal.id} value={charcoal.id}>
                 {charcoal.charcoal_name}
               </MenuItem>
             ))}
-          </EquipmentSelecter>
+          </EquipmentSelector>
         </Box>
 
         <Box display="flex" alignItems="center">

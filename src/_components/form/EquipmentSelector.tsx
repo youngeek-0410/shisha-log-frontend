@@ -10,19 +10,19 @@ type ControlSelectProps<TFieldValues extends FieldValues, TName extends FieldPat
   TName
 >;
 
-type EquipmentSelecterProps = {
+type EquipmentSelectorProps = {
   label: string;
   errors: FieldErrorsImpl;
   children: ReactNode;
 };
 
-export const EquipmentSelecter = <TFieldValues extends FieldValues, TName extends FieldPath<TFieldValues>>({
+export const EquipmentSelector = <TFieldValues extends FieldValues, TName extends FieldPath<TFieldValues>>({
   control,
   name,
   label,
   children,
   errors,
-}: EquipmentSelecterProps & ControlSelectProps<TFieldValues, TName>) => (
+}: EquipmentSelectorProps & ControlSelectProps<TFieldValues, TName>) => (
   <FormControl sx={{ width: "200px" }} size="small">
     <InputLabel id={label}>{label}</InputLabel>
     <Controller

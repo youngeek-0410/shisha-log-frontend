@@ -8,13 +8,13 @@ import { ProcessForm } from "./ProccessForm";
 import { Evaluation } from "./Evaluation";
 import { CreateDiaryInput, useCreateDiaryForm } from "@/domains/forms/create-diary";
 import { useRouter } from "next/navigation";
-import { GetEquimentsByUserIdResponse, useCreateDiaryByUserId } from "@/api/create-diary-form/equipment-form";
+import { GetEquipmentsByUserIdResponse, useCreateDiaryByUserId } from "@/api/create-diary-form/equipment-form";
 import { generateDateString } from "@/utils/date";
 import { useDisclosure } from "@/hooks/useDisclosure";
 import { Toast } from "@/_components/Toast";
 
 type FormProps = {
-  data: GetEquimentsByUserIdResponse;
+  data: GetEquipmentsByUserIdResponse;
   userId: string;
 };
 

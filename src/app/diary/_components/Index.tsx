@@ -16,20 +16,23 @@ import {
   Typography,
 } from "@mui/material";
 import { useMemo, useState } from "react";
-import { diaries, flavors } from "./testData";
-import { useDiariesPagination } from "@/hooks/useDiariesPagenation";
+import { useDiariesPagination } from "@/hooks/useDiariesPagination";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import { useRouter } from "next/navigation";
+import { GetDiariesByUserIdResponse } from "@/api/diary-index";
+import { generateDateFromString } from "@/utils/date";
 
-export const Index: React.FC = () => {
+export const Index = ({ data }: { data: GetDiariesByUserIdResponse }) => {
   const [creator, setCreator] = useState(-1);
   const [taste, setTaste] = useState(-1);
   const [sortTerms, setSortTerms] = useState({ date: "none", creator: "none", taste: "none" });
-  const [selectedFlavors, setSelectedFlavors] = useState<{ id: Number; name: string }[]>([]);
+  const [selectedFlavors, setSelectedFlavors] = useState<{ id: string; name: string }[]>([]);
 
   const shapedDiaries = useMemo(() => {
-    let tmpDiaries = diaries;
+    let tmpDiaries = data.user_diary_list.map((diary) => {
+      return { ...diary, create_date: generateDateFromString(diary.create_date) };
+    });
     if (sortTerms.date != "none") {
       tmpDiaries =
         sortTerms.date == "desc"
@@ -52,24 +55,29 @@ export const Index: React.FC = () => {
       .filter(
         (diary) =>
           diary.diary_flavor_list.find((flavor) =>
-            selectedFlavors.find((selectedFlavor) => selectedFlavor.name == flavor.flavor_name)
+            selectedFlavors.find((selectedFlavor) => selectedFlavor.id == flavor.id)
           ) || selectedFlavors.length == 0
       )
       .filter((diary) => diary.creator_evaluation >= creator)
       .filter((diary) => diary.taste_evaluation >= taste);
-  }, [sortTerms, creator, taste, selectedFlavors]);
+  }, [sortTerms, creator, taste, selectedFlavors, data.user_diary_list]);
 
   // page
   const { page, setPage, hasNext, hasPrev } = useDiariesPagination({ diaries: shapedDiaries });
 
   const router = useRouter();
+  const flavors = data.user_diary_list
+    .flatMap((diary) => diary.diary_flavor_list)
+    .map((flavor) => {
+      return { name: flavor.flavor_name + " " + flavor.brand_name, id: flavor.id };
+    });
 
   return (
     <>
       <Stack gap={"10px"}>
         <Stack gap={"10px"}>
           <CustomHeading>Narrowing down</CustomHeading>
-          <Typography fontSize={"18px"}>Fravor:</Typography>
+          <Typography fontSize={"18px"}>Flavor:</Typography>
           <Autocomplete
             multiple
             id="tags-outlined"
@@ -83,11 +91,23 @@ export const Index: React.FC = () => {
           />
           <Stack direction={"row"}>
             <Typography fontSize={"18px"}>Creator:</Typography>
-            <Star starNum={creator} setStarNum={setCreator} length={5} />
+            <Star
+              starNum={creator}
+              onChange={(number) => {
+                setCreator(number);
+              }}
+              length={5}
+            />
           </Stack>
           <Stack direction={"row"}>
             <Typography fontSize={"18px"}>Taste:</Typography>
-            <Star starNum={taste} setStarNum={setTaste} length={10} />
+            <Star
+              starNum={taste}
+              onChange={(number) => {
+                setTaste(number);
+              }}
+              length={10}
+            />
           </Stack>
           <Stack direction={"row"} gap={"10px"}>
             <Typography fontSize={"18px"}>Sort:</Typography>
@@ -136,7 +156,7 @@ export const Index: React.FC = () => {
           <CustomHeading>Lists</CustomHeading>
           <Stack flexDirection={"row"} textAlign={"center"} color={"text.secondary"} mt={"20px"}>
             <Box flexGrow={"1"} p={"5px"} border={"1px solid"} borderColor={"primary.main"}>
-              <Typography fontSize={"14px"}>Fravor</Typography>
+              <Typography fontSize={"14px"}>Flavor</Typography>
             </Box>
             <Box p={"5px"} minWidth={"55px"} border={"1px solid"} borderColor={"primary.main"} borderLeft={"0px"}>
               <Typography fontSize={"14px"}>Day</Typography>

@@ -1,75 +1,46 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction, useMemo, useRef } from "react";
 import {
   Box,
   Grid,
-  Input,
-  Select,
   MenuItem,
   Button,
   Typography,
   FormControl,
-  InputLabel,
   IconButton,
   Stack,
-  TextareaAutosize,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
-import { Control, Controller, UseFormRegister, UseFormWatch, useFieldArray } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import CustomHeading from "@/_components/customHeading";
+import { ControlledInput, Input } from "@/_components/form/Input";
+import { EquipmentSelector } from "@/_components/form/EquipmentSelector";
+import { GetEquipmentsByUserIdResponse } from "@/api/create-diary-form/equipment-form";
+import { ErrorMessage } from "@/_components/form/ErrorMessage";
 
 type EquipmentFormProps = {
-  register: UseFormRegister<DiaryFormValues>;
-  control: Control<DiaryFormValues>;
-  data: any;
+  data: GetEquipmentsByUserIdResponse;
+  fileName: string;
+  setFileName: Dispatch<SetStateAction<string>>;
 };
 
-type EquipmentSelecterProps = {
-  register: UseFormRegister<DiaryFormValues>;
-  control: Control<DiaryFormValues>;
-  propName: keyof DiaryFormValues;
-  label: string;
-  data: any;
-};
-
-type equipmentItem = {
-  itemData: any;
-  propName: keyof DiaryFormValues;
-  label: string;
-};
-
-export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control, data }) => {
-  const equipmentItemList: equipmentItem[] = [
-    {
-      itemData: data,
-      propName: "bottleId",
-      label: "Bottle",
-    },
-    {
-      itemData: data,
-      propName: "bowlId",
-      label: "Bowl",
-    },
-    {
-      itemData: data,
-      propName: "hmsId",
-      label: "Heat Management",
-    },
-    {
-      itemData: data,
-      propName: "charcoalId",
-      label: "Charcoal",
-    },
-  ];
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "flavor",
+export const EquipmentForm: React.FC<EquipmentFormProps> = ({ data, fileName, setFileName }) => {
+  const flavorList = data.user_flavor_list.map((flavor) => {
+    return { id: flavor.id, name: flavor.brand_name + " " + flavor.flavor_name };
   });
 
-  const [flavors, setFlavors] = useState<Flavor[]>([{ brandId: "10", tasteId: "10", amount: 10 }]);
+  const {
+    register,
+    control,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useFormContext();
+  const inputFileRef = useRef<HTMLInputElement>(null);
+  const flavors: { id: string; amount: number }[] = watch("diary_flavor_list");
 
   return (
     <>
@@ -79,24 +50,42 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
         </Box>
 
         <Box display="flex" flexDirection="column" gap={1}>
-          {equipmentItemList &&
-            equipmentItemList.map((v, i) => (
-              <EquipmentSelecter
-                key={i}
-                register={register}
-                control={control}
-                data={v.itemData}
-                propName={v.propName}
-                label={v.label}
-              ></EquipmentSelecter>
+          <EquipmentSelector control={control} name={"bottle"} label={"Bottle"} errors={errors}>
+            {data.user_bottle_list.map((bottle) => (
+              <MenuItem key={bottle.id} value={bottle.id}>
+                {bottle.bottle_name}
+              </MenuItem>
             ))}
+          </EquipmentSelector>
+          <EquipmentSelector control={control} name={"bowl"} label={"Bowl"} errors={errors}>
+            {data.user_bowl_list.map((bowl) => (
+              <MenuItem key={bowl.id} value={bowl.id}>
+                {bowl.bowl_name}
+              </MenuItem>
+            ))}
+          </EquipmentSelector>
+          <EquipmentSelector control={control} name={"heat_management"} label={"Heat Management"} errors={errors}>
+            {data.user_heat_management_list.map((heat_management) => (
+              <MenuItem key={heat_management.id} value={heat_management.id}>
+                {heat_management.heat_management_name}
+              </MenuItem>
+            ))}
+          </EquipmentSelector>
+          <EquipmentSelector control={control} name={"charcoal"} label={"Charcoal"} errors={errors}>
+            {data.user_charcoal_list.map((charcoal) => (
+              <MenuItem key={charcoal.id} value={charcoal.id}>
+                {charcoal.charcoal_name}
+              </MenuItem>
+            ))}
+          </EquipmentSelector>
         </Box>
 
         <Box display="flex" alignItems="center">
           <Typography>Climate :</Typography>
           <Input
+            disableErrorMessage
             type="number"
-            {...register("temperature")}
+            {...register("climate_temp")}
             inputProps={{
               style: { textAlign: "center" },
             }}
@@ -107,8 +96,9 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
           <Typography>℃,</Typography>
 
           <Input
+            disableErrorMessage
             type="number"
-            {...register("humidity")}
+            {...register("climate_humidity")}
             inputProps={{
               style: { textAlign: "center" },
             }}
@@ -118,6 +108,8 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
           />
           <Typography>%</Typography>
         </Box>
+        <ErrorMessage name={"climate_temp"} errors={errors} />
+        <ErrorMessage name={"climate_humidity"} errors={errors} />
       </Box>
 
       <Box mb={2}>
@@ -127,63 +119,56 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
       <Stack spacing={1}>
         <Box>
           <Grid container spacing={1} alignItems="center" mb={1}>
-            <Grid item xs={4} textAlign="center">
-              <Typography>Brand:</Typography>
+            <Grid item xs={6} textAlign="center">
+              <Typography>Flavor:</Typography>
             </Grid>
-            <Grid item xs={4} textAlign="center">
-              <Typography>Taste:</Typography>
-            </Grid>
-            <Grid item xs={4} textAlign="center">
+            <Grid item xs={6} textAlign="center">
               <Typography>Weight:</Typography>
             </Grid>
           </Grid>
 
           <Stack>
             <Grid container spacing={1} alignItems="center" mb={1}>
-              {flavors.map((flavor, index) => (
+              {flavors?.map((flavor, index) => (
                 <>
-                  <Grid item xs={4} textAlign="center">
+                  <Grid item xs={6} textAlign="center">
                     <FormControl sx={{ width: "80%" }} size="small">
-                      <Select
-                        value={flavor.brandId}
-                        onChange={(e) => {
-                          setFlavors(
-                            flavors.map((flavor, interIndex) => {
-                              return index == interIndex
-                                ? { brandId: e.target.value, tasteId: flavor.tasteId, amount: flavor.amount }
-                                : flavor;
+                      <Autocomplete
+                        disablePortal
+                        options={flavorList}
+                        value={flavorList.find((tmp) => tmp.id == flavor.id)}
+                        getOptionLabel={(flavor) => flavor.name}
+                        onChange={(_, value) =>
+                          value &&
+                          setValue(
+                            "diary_flavor_list",
+                            flavors?.map((flavor, interIndex) => {
+                              return index == interIndex ? { id: value?.id, amount: flavor.amount } : flavor;
                             })
-                          );
-                        }}
-                      >
-                        <MenuItem value={10}>hoge</MenuItem>
-                        <MenuItem value={20}>fuga</MenuItem>
-                      </Select>
+                          )
+                        }
+                        renderInput={(params) => <TextField {...params} label="Select flavors" placeholder="Flavors" />}
+                      />
                     </FormControl>
                   </Grid>
-                  <Grid item xs={4} textAlign="center">
-                    <FormControl sx={{ width: "80%" }} size="small">
-                      <Select
-                        value={flavor.tasteId}
-                        onChange={(e) => {
-                          setFlavors(
-                            flavors.map((flavor, interIndex) => {
-                              return index == interIndex
-                                ? { brandId: flavor.brandId, tasteId: e.target.value, amount: flavor.amount }
-                                : flavor;
-                            })
-                          );
-                        }}
-                      >
-                        <MenuItem value={10}>hoge</MenuItem>
-                        <MenuItem value={20}>fuga</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={4} textAlign="center">
+                  <Grid item xs={6} textAlign="center">
                     <FormControl sx={{ width: "80%" }} size="small">
                       <Box display={"flex"}>
-                        <Input type="number" />
+                        <Input
+                          type="number"
+                          errors={errors}
+                          value={flavor.amount}
+                          onChange={(e) => {
+                            setValue(
+                              "diary_flavor_list",
+                              flavors?.map((flavor, interIndex) => {
+                                return index == interIndex
+                                  ? { id: flavor.id, amount: e.target.value && Number(e.target.value) }
+                                  : flavor;
+                              })
+                            );
+                          }}
+                        />
                         <Typography>g</Typography>
                       </Box>
                     </FormControl>
@@ -195,46 +180,68 @@ export const EquipmentForm: React.FC<EquipmentFormProps> = ({ register, control,
               aria-label="add flavor"
               color="primary"
               onClick={() => {
-                setFlavors([...flavors, { brandId: "10", tasteId: "10", amount: 0 }]);
+                setValue("diary_flavor_list", [...flavors, { id: "", amount: undefined }]);
               }}
             >
               <AddCircleOutlineIcon />
             </IconButton>
+            <ErrorMessage name="diary_flavor_list" errors={errors} />
           </Stack>
         </Box>
 
         <Box>
-          <Typography>Service:</Typography>
+          <Typography>Serve:</Typography>
           <Input
             multiline
             minRows={3}
             placeholder="例：キウイとレモンは混ぜて残りのミントとセパレートで"
             color="primary"
             sx={{ width: "100%" }}
+            {...register("serve_text")}
+            errors={errors}
           />
         </Box>
 
-        <Typography>Image:</Typography>
+        <Box>
+          <Typography>Image:</Typography>
+          <ControlledInput
+            name="image"
+            control={control}
+            type="file"
+            accept="image/*"
+            value={""}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              const files = e.currentTarget.files;
+              if (!files || files.length == 0) {
+                setValue("image", undefined);
+                setFileName("");
+              } else {
+                const file = files[0];
+
+                const reader = new FileReader();
+                reader.onload = () => {
+                  const base64 = reader.result;
+                  if (typeof base64) {
+                    setValue("image", base64);
+                    setFileName(file.name);
+                  }
+                };
+                reader.readAsDataURL(file);
+              }
+            }}
+            ref={inputFileRef}
+            style={{ display: "none" }}
+          />
+          <Button
+            onClick={() => {
+              inputFileRef.current?.click();
+            }}
+          >
+            ファイルを選択
+          </Button>
+          <Typography>{fileName}</Typography>
+        </Box>
       </Stack>
     </>
   );
 };
-
-const EquipmentSelecter: React.FC<EquipmentSelecterProps> = ({ control, register, propName, label, data }) => (
-  <FormControl sx={{ width: "200px" }} size="small">
-    <InputLabel id={label}>{label}</InputLabel>
-    <Controller
-      name={propName}
-      control={control}
-      render={({ field }) => (
-        <Select {...field} labelId={label} label={label}>
-          {data.map((v: any) => (
-            <MenuItem key={v.id} value={v.id}>
-              {v.name}
-            </MenuItem>
-          ))}
-        </Select>
-      )}
-    />
-  </FormControl>
-);

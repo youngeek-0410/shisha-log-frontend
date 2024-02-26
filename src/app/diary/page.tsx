@@ -1,35 +1,18 @@
-import { Button } from "@mui/material";
-import Link from "next/link";
+"use client";
 
-const getAllDiary = async () => {
-  const res = await fetch("http://localhost:3000/testData/shishaLog.json");
-  const data: Diary[] = await res.json();
+import { Container } from "@mui/material";
+import { Index } from "./_components/Index";
+import { useGetDiariesByUserId } from "@/api/diary-index";
 
-  return { data };
-};
-
-export default async function Home() {
-  const { data } = await getAllDiary();
+export default function Home() {
+  const userId = process.env.NEXT_PUBLIC_USER_ID;
+  const { data, isLoading } = useGetDiariesByUserId(userId as string, !!userId);
   return (
-    <>
-      {data.map((v, i) => (
-        <DiaryCard key={i} id={v.id} title={v.title} />
-      ))}
-      <Link href="/diary/new">
-        <Button variant="outlined">作成</Button>
-      </Link>
-    </>
+    !isLoading &&
+    data && (
+      <Container>
+        <Index data={data} />
+      </Container>
+    )
   );
 }
-
-const DiaryCard: React.FC<Diary> = (props) => {
-  return (
-    <div>
-      <Link key={props.id} href={`/diary/${props.id}`}>
-        <p>
-          {props.id}: {props.title}
-        </p>
-      </Link>
-    </div>
-  );
-};

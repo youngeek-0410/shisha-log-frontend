@@ -1,18 +1,22 @@
 import { createTheme } from "@mui/material/styles";
 
+const background = "#292929";
 const purple = "#B6A2D1";
 const gray = "#cecece";
+const green = "#23BFBB";
 
 const theme = createTheme({
   palette: {
     primary: {
       main: purple,
     },
-    // secondary: {
-    // main: "#19857b",
-    // },
+    secondary: {
+      main: green,
+    },
     background: {
-      default: "#292929",
+      default: background,
+      // default: "#0d1210",
+      // default: "#0e1412",
     },
     text: {
       primary: purple,
@@ -39,6 +43,20 @@ const theme = createTheme({
       },
     },
     MuiDivider: {
+      styleOverrides: {
+        root: {
+          borderColor: purple,
+        },
+      },
+    },
+    MuiList: {
+      styleOverrides: {
+        root: {
+          backgroundColor: background,
+        },
+      },
+    },
+    MuiSelect: {
       styleOverrides: {
         root: {
           borderColor: purple,

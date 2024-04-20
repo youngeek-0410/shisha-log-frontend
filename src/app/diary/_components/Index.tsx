@@ -189,9 +189,9 @@ export const Index = ({ data }: { data: GetDiariesByUserIdResponse }) => {
                     </Typography>
                   </Box>
                   <Box p={"5px"} minWidth={"55px"} border={"1px solid"} borderColor={"primary.main"} borderLeft={"0px"}>
-                    <Typography fontSize={"14px"}>{`${
-                      diary.create_date.getMonth() + 1
-                    }/${diary.create_date.getDate()}`}</Typography>
+                    <Typography
+                      fontSize={"14px"}
+                    >{`${diary.create_date.getMonth()}/${diary.create_date.getDate()}`}</Typography>
                   </Box>
                   <Box p={"5px"} minWidth={"55px"} border={"1px solid"} borderColor={"primary.main"} borderLeft={"0px"}>
                     <Typography fontSize={"14px"}>{diary.taste_evaluation}</Typography>
